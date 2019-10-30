@@ -10,6 +10,9 @@ https://medium.com/@viritaromero/web-scraping-5k-race-results-with-python-and-be
 
 https://beautiful-soup-4.readthedocs.io/en/latest/
 
+**Seaborn Help:**
+https://seaborn.pydata.org/generated/seaborn.FacetGrid.html
+
 **Learning how to webscrape:**
 
 https://www.edureka.co/blog/web-scraping-with-python/
