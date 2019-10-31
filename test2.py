@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -74,9 +75,37 @@ def scrapeData(url, start, end):
     individual_times = table_rows[start:end]
     return individual_times
 
+def getColumns(url, start):
+    session = HTMLSession()
+    resp = session.get(url)
+    resp.html.render()
+    soup = BeautifulSoup(resp.html.html, "lxml")
+
+    columns = soup.findAll('thead')
+    columnNames = []
+    for col in columns:
+        col_tr = col.find_all('tr')
+        strCol = str(col_tr)
+        cleanC = BeautifulSoup(strCol, "lxml")
+        cleanCol = cleanC.get_text()
+        columnNames.append(cleanCol)
+
+    Columns = columnNames[start:start+1]
+    Columns1 = [x.split("\n") for x in Columns]
+    Columns2 = Columns1[0][1::2]
+    del Columns2[-1]
+    Columns2[1] = "LASTNAME"
+    Columns2.insert(2, "FIRSTNAME")
+    return Columns2
+
+print(getColumns("https://www.tfrrs.org/results/xc/16604/Jim_DrewsTori_Neubauer_Invitational", 1))
+
+
 # =======================================================
 
 TwinTwlight_list = scrapeData("https://www.tfrrs.org/results/xc/15821/Twin_Cities_Twilight", 152, 361)
+TwinCol = getColumns("https://www.tfrrs.org/results/xc/15821/Twin_Cities_Twilight", 3)
+print(TwinCol)
 #Start: 152, End: 361
 
 # print(TwinTwlight_list)
