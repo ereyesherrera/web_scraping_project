@@ -212,9 +212,27 @@ print(SummitCupMeet_Mac)
 Meets_18 = {"Twin Cities": "https://www.tfrrs.org/results/xc/14208/Twin_Cities_Twilight",
             "St. Olaf": "https://www.tfrrs.org/results/xc/14588/St._Olaf_Invitational",
             "Griak": "https://www.tfrrs.org/results/xc/14671/Roy_Griak_Invitational",
+            "Oshkosh":"",
             "MIAC" : "https://www.tfrrs.org/results/xc/14944/MIAC_Championships",
             "Region": "https://www.tfrrs.org/results/xc/14517/NCAA_Division_III_Central_Region_Cross_Country_Championships"}
 
+Meets_17 = {"Augsburg":"https://www.tfrrs.org/results/xc/12042/Augsburg_Open",
+            "River Falls":"https://www.tfrrs.org/results/xc/11951/Falcon_Invitational",
+            "St. Olaf":"https://www.tfrrs.org/results/xc/12550/St._Olaf_Invitational",
+            "Summit Cup":"https://www.tfrrs.org/results/xc/12804/Summit_Cup",
+            "Carleton":"https://www.tfrrs.org/results/xc/12950/Carleton_Running_of_the_Cows",
+            "Lacrosse": "https://www.tfrrs.org/results/xc/13226/UW_La_Crosse_Jim_DrewsTori_Neubauer_Invitational",
+            "MIAC":"http://www.fastfinishtiming.com/2017RoadandCC/17Results/MIACMen.html",
+            "Region": "https://www.tfrrs.org/results/xc/13031/NCAA_Division_III_Central_Region_Cross_Country_Championships"}
+
+Meets_16 = {"Augsburg":"http://wayzatatiming.com/crosscountry/2016/AugsburgAlumni/",
+            "River Falls": "https://www.tfrrs.org/results/xc/9999/Falcon_Invitational",
+           "Summit Cup": "https://www.tfrrs.org/results/xc/10620/Summit_Cup",
+            "Griak": "https://www.tfrrs.org/results/xc/10762/ROY_GRIAK_INVITATIONAL",
+            "Blugold": "https://www.tfrrs.org/results/xc/10836/Blugold_Invitational",
+            "Lacrosse": "https://www.tfrrs.org/results/xc/11045/Jim_DrewsTori_Neubauer_Invitational",
+            "MIAC":"https://www.tfrrs.org/results/xc/11198/MIAC_Championships",
+            "Region":"https://www.tfrrs.org/results/xc/11018/NCAA_Division_III_Central_Region_Cross_Country_Championships"}
 # =======================================================
 # Putting them all together
 # =======================================================
