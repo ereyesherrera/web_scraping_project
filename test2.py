@@ -1,11 +1,11 @@
 import pandas as pd
 import re
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 
+# =======================================================
+# First pass to create web scraping script
 # =======================================================
 session = HTMLSession()
 resp = session.get("https://www.tfrrs.org/results/xc/16604/Jim_DrewsTori_Neubauer_Invitational")
@@ -35,32 +35,40 @@ individual_times = table_rows[23:423]
 LacrosseMeet = pd.DataFrame(individual_times)
 
 LacrosseMeet = LacrosseMeet[0].str.split(',', expand=True)
-LacrosseMeet.columns = ["Place", "LastName", "FirstName", "Year", "Team", "AvgMile", "Time", "Score", "3k", "5.8k"]
-LacrosseMeet["Place"] = LacrosseMeet["Place"].str.strip("[")
-LacrosseMeet["5.8k"] = LacrosseMeet["5.8k"].str.strip("]")
-
-# Saving new data set to only have Macalester runners
-LacrosseMeet = LacrosseMeet[LacrosseMeet.Team == "Macalester"]
-rows = LacrosseMeet.shape
+LacrosseMeet.columns = ["PL", "LASTNAME", "FIRSTNAME", "YEAR", "TEAM", "Avg. Mile", "TIME", "SCORE", "3K", "5.8K"]
+LacrosseMeet["PL"] = LacrosseMeet["PL"].str.strip("[")
+LacrosseMeet["5.8K"] = LacrosseMeet["5.8K"].str.strip("]")
 
 # Adding column to designate meet name
+rows = LacrosseMeet.shape
 meet = ["Jim Drews Invitational (Lacrosse)"]*rows[0]
-LacrosseMeet["Meet"] = meet
+LacrosseMeet["MEET"] = meet
+
+# Adding column to designate year of race
+LacrosseMeet["DATE"] = 2019
+
+# Saving new data set to only have Macalester runners
+LacrosseMeet_Mac = LacrosseMeet[LacrosseMeet.TEAM == "Macalester"]
 
 # Adding column to designate Team Place for each runner
-TeamPlace = list(range(1,rows[0]+1))
-LacrosseMeet.insert(1, "TeamPlace", TeamPlace)
+shape = LacrosseMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+LacrosseMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
 
-print(LacrosseMeet)
+print(LacrosseMeet_Mac)
 
 # =======================================================
-def scrapeData(url, start, end):
+# Function to Scrape Data
+# =======================================================
+
+def scrapeData(url, start, end, startCol):
     session = HTMLSession()
     resp = session.get(url)
     resp.html.render()
     soup = BeautifulSoup(resp.html.html, "lxml")
 
+    # Get rows of data for all runners
     rows = soup.findAll('tr')
     table_rows = []
     for row in rows:
@@ -70,17 +78,16 @@ def scrapeData(url, start, end):
         cleanText = clean.get_text(strip=True)
         table_rows.append(cleanText)
 
+    # Extract men's race only
     start = start
     end = end
     individual_times = table_rows[start:end]
-    return individual_times
 
-def getColumns(url, start):
-    session = HTMLSession()
-    resp = session.get(url)
-    resp.html.render()
-    soup = BeautifulSoup(resp.html.html, "lxml")
+    # Create data frame
+    df = pd.DataFrame(individual_times)
+    df = df[0].str.split(',', expand=True)
 
+    # Get column names for df
     columns = soup.findAll('thead')
     columnNames = []
     for col in columns:
@@ -90,133 +97,128 @@ def getColumns(url, start):
         cleanCol = cleanC.get_text()
         columnNames.append(cleanCol)
 
-    Columns = columnNames[start:start+1]
+    Columns = columnNames[startCol:startCol + 1]
     Columns1 = [x.split("\n") for x in Columns]
     Columns2 = Columns1[0][1::2]
     del Columns2[-1]
     Columns2[1] = "LASTNAME"
     Columns2.insert(2, "FIRSTNAME")
-    return Columns2
 
-print(getColumns("https://www.tfrrs.org/results/xc/16604/Jim_DrewsTori_Neubauer_Invitational", 1))
+    # Change column names of df
+    df.columns = Columns2
 
+    # Remove extra brackets at either end
+    df[df.columns[0]]= df[df.columns[0]].str.strip("[")
+    df[df.columns[-1]] = df[df.columns[-1]].str.strip("]")
+
+    return df
 
 # =======================================================
 
-TwinTwlight_list = scrapeData("https://www.tfrrs.org/results/xc/15821/Twin_Cities_Twilight", 152, 361)
-TwinCol = getColumns("https://www.tfrrs.org/results/xc/15821/Twin_Cities_Twilight", 3)
-print(TwinCol)
-#Start: 152, End: 361
+# =======================================================
+# Data on 2019 Meets (including the one above)
+# =======================================================
 
-# print(TwinTwlight_list)
+TwinTwlightMeet = scrapeData("https://www.tfrrs.org/results/xc/15821/Twin_Cities_Twilight", 152, 361, 3)
+#Start: 152, End: 361, 3
 
-TwinTwlightMeet = pd.DataFrame(TwinTwlight_list)
-TwinTwlightMeet = TwinTwlightMeet[0].str.split(',', expand=True)
-TwinTwlightMeet.columns = ["Place", "LastName", "FirstName", "Year", "Team", "AvgMile", "Time", "Score"]
-TwinTwlightMeet["Place"] = TwinTwlightMeet["Place"].str.strip("[")
-TwinTwlightMeet["Score"] = TwinTwlightMeet["Score"].str.strip("]")
-
-# Saving new data set to only have Macalester runners
-
-TwinTwlightMeet = TwinTwlightMeet[TwinTwlightMeet.Team == "Macalester"]
+# Adding column to designate meet name
 rows = TwinTwlightMeet.shape
-
-# Adding column to designate meet name
 meet = ["Twin Cities Invitational"]*rows[0]
-TwinTwlightMeet["Meet"] = meet
+TwinTwlightMeet["MEET"] = meet
 
-# Adding column to designate Team Place for each runner
-TeamPlace = list(range(1,rows[0]+1))
-TwinTwlightMeet.insert(1, "TeamPlace", TeamPlace)
-
-print(TwinTwlightMeet)
-
-# =======================================================
-Blugold_list = scrapeData("https://www.tfrrs.org/results/xc/16404/Blugold_Invitational", 31, 478)
-# Start: 31, End: 478
-
-# print(Blugold_list)
-
-BlugoldMeet = pd.DataFrame(Blugold_list)
-BlugoldMeet = BlugoldMeet[0].str.split(',', expand=True)
-BlugoldMeet.columns = ["Place", "LastName", "FirstName", "Year", "Team", "AvgMile", "Time", "Score", "5k"]
-BlugoldMeet["Place"] = BlugoldMeet["Place"].str.strip("[")
-BlugoldMeet["5k"] = BlugoldMeet["5k"].str.strip("]")
+# Adding column to designate year of race
+TwinTwlightMeet["DATE"] = 2019
 
 # Saving new data set to only have Macalester runners
+TwinTwlightMeet_Mac = TwinTwlightMeet[TwinTwlightMeet.TEAM == "Macalester"]
 
-BlugoldMeet = BlugoldMeet[BlugoldMeet.Team == "Macalester"]
+# Adding column to designate Team Place for each runner
+shape = TwinTwlightMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+TwinTwlightMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
+
+print(TwinTwlightMeet_Mac)
+
+# =======================================================
+BlugoldMeet = scrapeData("https://www.tfrrs.org/results/xc/16404/Blugold_Invitational", 31, 478, 1)
+# Start: 31, End: 478, 1
+
+# Adding column to designate meet name
 rows = BlugoldMeet.shape
+meet = ["Blugold Invitational"]*rows[0]
+BlugoldMeet["MEET"] = meet
 
-# Adding column to designate meet name
-
-race = ["Blugold Invitational"]*rows[0]
-BlugoldMeet["Meet"] = race
-
-# Adding column to designate Team Place for each runner
-TeamPlace = list(range(1,rows[0]+1))
-BlugoldMeet.insert(1, "TeamPlace", TeamPlace)
-
-print(BlugoldMeet)
-
-# =======================================================
-Carleton_list = scrapeData("https://www.tfrrs.org/results/xc/16179/Running_of_the_Cows", 18, 244)
-# Start: 18, End:244
-
-# print(Carleton_list)
-
-CarletonMeet = pd.DataFrame(Carleton_list)
-CarletonMeet = CarletonMeet[0].str.split(',', expand=True)
-CarletonMeet.columns = ["Place", "LastName", "FirstName", "Year", "Team", "AvgMile", "Time", "Score", "1k", "2.4k", "4.5k", "7k"]
-CarletonMeet["Place"] = CarletonMeet["Place"].str.strip("[")
-CarletonMeet["7k"] = CarletonMeet["7k"].str.strip("]")
+# Adding column to designate year of race
+BlugoldMeet["DATE"] = 2019
 
 # Saving new data set to only have Macalester runners
-CarletonMeet = CarletonMeet[CarletonMeet.Team == "Macalester"]
+BlugoldMeet_Mac = BlugoldMeet[BlugoldMeet.TEAM == "Macalester"]
+
+# Adding column to designate Team Place for each runner
+shape = BlugoldMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+BlugoldMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
+
+print(BlugoldMeet_Mac)
+
+# =======================================================
+CarletonMeet = scrapeData("https://www.tfrrs.org/results/xc/16179/Running_of_the_Cows", 18, 244, 1)
+# Start: 18, End:244, 1
+
+# Adding column to designate meet name
 rows = CarletonMeet.shape
+meet = ["Running of the Cows (Carleton)"]*rows[0]
+CarletonMeet["MEET"] = meet
 
-# Adding column to designate meet name
-race = ["Running of the Cows (Carleton)"]*rows[0]
-CarletonMeet["Meet"] = race
-
-# Adding column to designate Team Place for each runner
-TeamPlace = list(range(1,rows[0]+1))
-CarletonMeet.insert(1, "TeamPlace", TeamPlace)
-
-print(CarletonMeet)
-
-# =======================================================
-SummitCup_list = scrapeData("https://www.tfrrs.org/results/xc/16025/Summit_Cup", 4, 40)
-# Start: 4, End: 40
-
-# print(SummitCup_list)
-
-SummitCupMeet = pd.DataFrame(SummitCup_list)
-SummitCupMeet = SummitCupMeet[0].str.split(',', expand=True)
-SummitCupMeet.columns = ["Place", "LastName", "FirstName", "Year", "Team", "AvgMile", "Time", "Score"]
-SummitCupMeet["Place"] = SummitCupMeet["Place"].str.strip("[")
-SummitCupMeet["Score"] = SummitCupMeet["Score"].str.strip("]")
+# Adding column to designate year of race
+CarletonMeet["DATE"] = 2019
 
 # Saving new data set to only have Macalester runners
-SummitCupMeet = SummitCupMeet[SummitCupMeet.Team == "Macalester"]
-rows = SummitCupMeet.shape
-
-
-# Adding column to designate meet name
-race = ["Summit Cup"]*rows[0]
-SummitCupMeet["Meet"] = race
+CarletonMeet_Mac = CarletonMeet[CarletonMeet.TEAM == "Macalester"]
 
 # Adding column to designate Team Place for each runner
-TeamPlace = list(range(1,rows[0]+1))
-SummitCupMeet.insert(1, "TeamPlace", TeamPlace)
+shape = CarletonMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+CarletonMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-print(SummitCupMeet)
+print(CarletonMeet_Mac)
+# =======================================================
+SummitCupMeet = scrapeData("https://www.tfrrs.org/results/xc/16025/Summit_Cup", 4, 40, 1)
+# Start: 4, End: 40, 1
+
+# Adding column to designate meet name
+rows = SummitCupMeet.shape
+race = ["Summit Cup"]*rows[0]
+SummitCupMeet["MEET"] = race
+
+# Adding column to designate year of race
+SummitCupMeet["DATE"] = 2019
+
+# Saving new data set to only have Macalester runners
+SummitCupMeet_Mac = SummitCupMeet[SummitCupMeet.TEAM == "Macalester"]
+
+# Adding column to designate Team Place for each runner
+shape = SummitCupMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+SummitCupMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
+
+print(SummitCupMeet_Mac)
 
 # =======================================================
-
-
+# Data on 2018, 2017, 2016 Meets
 # =======================================================
 
-MeetTimes = pd.concat([TwinTwlightMeet, SummitCupMeet, CarletonMeet, BlugoldMeet, LacrosseMeet], sort=False)
+Meets_18 = {"Twin Cities": "https://www.tfrrs.org/results/xc/14208/Twin_Cities_Twilight",
+            "St. Olaf": "https://www.tfrrs.org/results/xc/14588/St._Olaf_Invitational",
+            "Griak": "https://www.tfrrs.org/results/xc/14671/Roy_Griak_Invitational",
+            "MIAC" : "https://www.tfrrs.org/results/xc/14944/MIAC_Championships",
+            "Region": "https://www.tfrrs.org/results/xc/14517/NCAA_Division_III_Central_Region_Cross_Country_Championships"}
+
+# =======================================================
+# Putting them all together
+# =======================================================
+MeetTimes = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac],
+                      sort=False)
 
 MeetTimes.to_csv("Meet.csv")
