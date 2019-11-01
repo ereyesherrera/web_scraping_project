@@ -1,4 +1,4 @@
-# web_scraping_project
+# Analyzing Macalester Men's Cross Country Meet Results with Beautiful Soup
 
 ## Sources
 
