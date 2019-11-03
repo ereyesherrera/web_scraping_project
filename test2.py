@@ -225,7 +225,32 @@ SummitCupMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
 # print(SummitCupMeet_Mac)
 
-MeetTimes_19 = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac],
+# =======================================================
+
+MIACMeet = scrapeData("https://www.tfrrs.org/results/xc/16678/MIAC_Conference_Championships", 14, 234, 1)
+# Start: 14, End: 234, 1
+
+# Adding column to designate meet name
+rows = MIACMeet.shape
+race = ["MIAC"]*rows[0]
+MIACMeet["MEET"] = race
+
+# Adding column to designate year of race
+MIACMeet["DATE"] = 2019
+
+# Saving new data set to only have Macalester runners
+MIACMeet_Mac = MIACMeet[MIACMeet.TEAM == "Macalester"]
+
+# Adding column to designate Team Place for each runner
+shape = MIACMeet_Mac.shape
+TeamPlace = list(range(1,shape[0]+1))
+MIACMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
+
+
+print(MIACMeet_Mac)
+# =======================================================
+MeetTimes_19 = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac,
+                          MIACMeet_Mac],
                       sort=False)
 
 MeetTimes_19.to_csv("MeetTimes_19.csv")
