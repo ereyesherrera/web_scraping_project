@@ -3,17 +3,21 @@
 ## Sources
 
 **Inspiration and very helpful code (which mine follows closely):**
+
 https://medium.com/@viritaromero/web-scraping-5k-race-results-with-python-and-beautifulsoup-d08eba5624eb
 
 **Learning how to webscrape:**
+
 https://www.edureka.co/blog/web-scraping-with-python/
 https://stackoverflow.com/questions/34370521/scraping-elements-without-an-id-or-class-from-a-web-page-using-python-beautifuls
 http://theautomatic.net/2019/01/19/scraping-data-from-javascript-webpage-python/
 
 **Beautiful Soup Documentation:**
+
 https://beautiful-soup-4.readthedocs.io/en/latest/
 
 **Learning Pandas, Seaborn, and other Modules:**
+
 https://datacarpentry.org/python-ecology-lesson/03-index-slice-subset/
 http://www.datasciencemadesimple.com/append-concatenate-rows-python-pandas-row-bind/
 https://stackoverflow.com/questions/45236592/why-is-rpy2-not-installing-in-my-osx-sierra-terminal
@@ -36,11 +40,13 @@ https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.assi
 https://www.shanelynn.ie/summarising-aggregation-and-grouping-data-in-python-pandas/
 
 **Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
+
 https://www.inchcalculator.com/minutes-to-time-calculator/
 https://stackoverflow.com/questions/6402812/how-to-convert-an-hmmss-time-string-to-seconds-in-python/6402934
 https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html#missing-data
 
 **Websites where data was retrieved:**
+
 https://results.flotrack.org/XC-PTT.html?mid=1469
 https://www.tfrrs.org/results/xc/14208/Twin_Cities_Twilight
 https://www.tfrrs.org/results/xc/14588/St._Olaf_Invitational
