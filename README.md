@@ -38,6 +38,7 @@
 * https://www.geeksforgeeks.org/python-pandas-split-strings-into-two-list-columns-using-str-split/
 * https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.assign.html
 * https://www.shanelynn.ie/summarising-aggregation-and-grouping-data-in-python-pandas/
+* https://stackoverflow.com/questions/24179284/accessing-hierarchical-columns-in-pandas-after-groupby
 
 **Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
 
