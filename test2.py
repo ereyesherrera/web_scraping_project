@@ -420,7 +420,9 @@ for key in Meets_17.keys():
 # page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
 # Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
 # it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
+# This can be placed in another Python file and ran by itself within the same working directory.
 
+session = HTMLSession()
 resp2 = session.get("http://www.fastfinishtiming.com/2017RoadandCC/17Results/MIACMen.html")
 resp2.html.render()
 
@@ -461,6 +463,12 @@ MIAC17 = MIAC17[MIAC17.TEAM == "Macalester"]
 shape = MIAC17.shape
 TeamPlace = list(range(1, shape[0] + 1))
 MIAC17.insert(1, "TEAMPLACE", TeamPlace)
+
+# Adding column to designate Avg. mile for each runner
+MIAC17["Avg. Mile"] = ["5:21.3", "5:22.5", "5:27.6", "5:29.4", "5:32.1",
+                         "5:35.5", "5:37.6", "5:39.4", "5:46.1", "5:47.5",
+                         "5:47.7", "5:50.8", "5:57.9", "6:01.8", "6:03.9",
+                         "6:07.7", "6:21.2", "6:34.2", "6:35.9"]
 
 splitName = MIAC17["NAME"].str.split(" ", n = 1, expand = True)
 MIAC17["FIRSTNAME"] = splitName[0]
@@ -575,7 +583,9 @@ for key in Meets_16.keys():
 # page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
 # Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
 # it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
+# This can be placed in another Python file and ran by itself within the same working directory.
 
+session = HTMLSession()
 resp3 = session.get("http://wayzatatiming.com/crosscountry/2016/AugsburgAlumni/")
 resp3.html.render()
 

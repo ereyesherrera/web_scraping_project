@@ -1,20 +1,20 @@
-,PL,TEAMPLACE,TEAM,TIME,PACE,YEAR,MEET,DATE,FIRSTNAME,LASTNAME
-16,17,1,Macalester,26:37.0,3:20/K,JR,MIAC,2017,Chris,Boranian
-19,20,2,Macalester,26:42.9,3:20/K,JR,MIAC,2017,James,Doherty
-39,40,3,Macalester,27:08.4,3:24/K,SO,MIAC,2017,Jake,Lepak
-49,50,4,Macalester,27:17.4,3:25/K,SO,MIAC,2017,Peter,Jarka-Sellers
-62,63,5,Macalester,27:31.1,3:26/K,FR,MIAC,2017,Adrian,Johnson
-75,76,6,Macalester,27:47.6,3:28/K,JR,MIAC,2017,Spencer,Grant
-82,83,7,Macalester,27:58.4,3:30/K,SO,MIAC,2017,Edwin,Reyes Herrera
-89,90,8,Macalester,28:07.1,3:31/K,SR,MIAC,2017,Nolan,Ebner
-113,113,9,Macalester,28:40.4,3:35/K,SR,MIAC,2017,Alex,Gordon
-123,123,10,Macalester,28:47.6,3:36/K,SO,MIAC,2017,Michael,Milner
-124,124,11,Macalester,28:48.4,3:36/K,SO,MIAC,2017,Ben,Bildsten
-135,135,12,Macalester,29:03.8,3:38/K,JR,MIAC,2017,Sam,Richmond
-154,154,13,Macalester,29:39.2,3:42/K,SO,MIAC,2017,Sam,O'Donnell-hoff
-168,168,14,Macalester,29:58.6,3:45/K,SR,MIAC,2017,Will,Feeney
-174,174,15,Macalester,30:09.1,3:46/K,FR,MIAC,2017,Sasha,Lewis-Norelle
-178,178,16,Macalester,30:27.9,3:48/K,FR,MIAC,2017,Mark,Baumeister
-192,192,17,Macalester,31:35.1,3:57/K,FR,MIAC,2017,Elijah,Levey
-198,198,18,Macalester,32:39.4,4:05/K,JR,MIAC,2017,Mason,Martinez
-199,199,19,Macalester,32:48.2,4:06/K,SO,MIAC,2017,Armando,Hernandez
+,PL,TEAMPLACE,TEAM,TIME,PACE,YEAR,MEET,DATE,Avg. Mile,FIRSTNAME,LASTNAME
+16,17,1,Macalester,26:37.0,3:20/K,JR,MIAC,2017,5:21.3,Chris,Boranian
+19,20,2,Macalester,26:42.9,3:20/K,JR,MIAC,2017,5:22.5,James,Doherty
+39,40,3,Macalester,27:08.4,3:24/K,SO,MIAC,2017,5:27.6,Jake,Lepak
+49,50,4,Macalester,27:17.4,3:25/K,SO,MIAC,2017,5:29.4,Peter,Jarka-Sellers
+62,63,5,Macalester,27:31.1,3:26/K,FR,MIAC,2017,5:32.1,Adrian,Johnson
+75,76,6,Macalester,27:47.6,3:28/K,JR,MIAC,2017,5:35.5,Spencer,Grant
+82,83,7,Macalester,27:58.4,3:30/K,SO,MIAC,2017,5:37.6,Edwin,Reyes Herrera
+89,90,8,Macalester,28:07.1,3:31/K,SR,MIAC,2017,5:39.4,Nolan,Ebner
+113,113,9,Macalester,28:40.4,3:35/K,SR,MIAC,2017,5:46.1,Alex,Gordon
+123,123,10,Macalester,28:47.6,3:36/K,SO,MIAC,2017,5:47.5,Michael,Milner
+124,124,11,Macalester,28:48.4,3:36/K,SO,MIAC,2017,5:47.7,Ben,Bildsten
+135,135,12,Macalester,29:03.8,3:38/K,JR,MIAC,2017,5:50.8,Sam,Richmond
+154,154,13,Macalester,29:39.2,3:42/K,SO,MIAC,2017,5:57.9,Sam,O'Donnell-hoff
+168,168,14,Macalester,29:58.6,3:45/K,SR,MIAC,2017,6:01.8,Will,Feeney
+174,174,15,Macalester,30:09.1,3:46/K,FR,MIAC,2017,6:03.9,Sasha,Lewis-Norelle
+178,178,16,Macalester,30:27.9,3:48/K,FR,MIAC,2017,6:07.7,Mark,Baumeister
+192,192,17,Macalester,31:35.1,3:57/K,FR,MIAC,2017,6:21.2,Elijah,Levey
+198,198,18,Macalester,32:39.4,4:05/K,JR,MIAC,2017,6:34.2,Mason,Martinez
+199,199,19,Macalester,32:48.2,4:06/K,SO,MIAC,2017,6:35.9,Armando,Hernandez

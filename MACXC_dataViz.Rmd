@@ -158,6 +158,7 @@ MeetALL = MeetALL.drop(['Unnamed: 0'], axis=1)
 ```{r}
 MeetALL <- py$MeetALL %>%
   mutate_if(is_list, as.character)
+
 MeetALL
 ```
 
