@@ -40,6 +40,7 @@
 * https://www.shanelynn.ie/summarising-aggregation-and-grouping-data-in-python-pandas/
 * https://stackoverflow.com/questions/24179284/accessing-hierarchical-columns-in-pandas-after-groupby
 * https://rstudio.github.io/reticulate/#python-in-r-markdown
+* http://queirozf.com/entries/pandas-dataframe-groupby-examples
 
 **Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
 

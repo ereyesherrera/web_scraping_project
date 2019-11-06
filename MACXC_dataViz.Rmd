@@ -149,6 +149,10 @@ avgTime = pd.DataFrame(avgTime.groupby("MEET").agg({"TIME": ["min", "max", "mean
 avgTimeSummary = avgTime["TIME"].assign(gap = avgTime["TIME"]["max"] - avgTime["TIME"]["min"])
 print(avgTimeSummary)
 ```
+```{r}
+py$avgTime
+```
+
 
 ```{python}
 MeetALL = pd.read_csv("data/MeetALL.csv")
