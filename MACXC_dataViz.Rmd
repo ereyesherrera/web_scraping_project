@@ -1,0 +1,163 @@
+---
+title: "Data Summary and Visualization of the MAC PACK '19"
+author: "Edwin Reyes Herrera"
+date: "11/5/2019"
+output: 
+  html_document:
+    df_print: paged
+    keep_md: true
+---
+```{python}
+from tabulate import tabulate
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set(style="whitegrid")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(reticulate)
+```
+
+The "Mac Pack" is what the Macalester Men's Cross Country Team is fondly known as, given to our current coach Matt Haugen. He deems the "Mac Pack Era" as the time in which he has been head coach, which has been since the early 2000s. The team nickname is a play-on-words to indicate that we run in packs, which is important in cross country since we the goal is to try to minimize the number of points the team collects in a meet.
+
+This reads in the csv file that was created from the python script dedicated to web scraping meet results and creating a full data frame containing information on all the meets that the men's cross country team competed in this year. It drops an unused variable left over from that process.
+
+```{python}
+MeetInfo = pd.read_csv("MeetTimes_19.csv")
+MeetInfo = MeetInfo.drop(['Unnamed: 0'], axis=1)
+```
+
+* Calls dataframe that was imported by pandas, converts it to r data frame and appropriate types
+
+```{r}
+MeetInfo <- py$MeetInfo %>%
+  mutate_if(is.list,as.character)
+
+MeetInfo
+```
+
+```{python}
+g = sns.FacetGrid(MeetInfo, col="LASTNAME", hue = "FIRSTNAME", col_wrap=5)
+(g.map(plt.plot,"MEET", "TEAMPLACE", marker=".")
+.set_axis_labels("", "Team Place")
+.set_xticklabels([]))
+
+plt.show()
+```
+
+```{r}
+ggplot(MeetInfo, aes(x = MEET, y = TEAMPLACE, label = LASTNAME, color = LASTNAME)) +
+    geom_text(size = 3) +
+    theme_minimal() +
+    theme(axis.text.x=element_text(angle = 90, size = 7), legend.position ="none") +
+    scale_y_continuous(breaks = seq(1,21, 1)) + 
+    scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", 
+                                "Running of the Cows (Carleton)", 
+                                "Blugold Invitational", 
+                                "Jim Drews Invitational (Lacrosse)", "MIAC"))
+```
+
+* uses `value_counts` to find the number of times a runner appears in the dataset, which also reflects how many meets a runner participated in this year
+* Converted into a dataframe, column renamed to "Count"
+
+```{python}
+runnerMeets = pd.DataFrame(MeetInfo.LASTNAME.value_counts())
+runnerMeets.columns = ["Count"]
+```
+```{r}
+py$runnerMeets
+```
+
+* Takes the dataframe above, filters so that it only has those where count = 6, then gets the names of those runners by using `.index` and saving them into a list
+* This will be used to calculate total score runner contributed
+
+```{python}
+scorers = list(runnerMeets[runnerMeets.Count == 6].index)
+scorers
+```
+
+* First: Filters original `MeetInfo` dataset to only include those in which runners were in the top 7 (i.e. scored)
+* Then, it filters again to only include runners in which participated in all meets by referencing `scorers` list above with those names
+* Groups by Last Name, sums the total score they accumulated for all meets, and changes the index into columns using `.reset.index()`
+
+```{python}
+top7Scores = MeetInfo[MeetInfo.TEAMPLACE.isin(range(1,8))]
+top7Scores2 = top7Scores[top7Scores.LASTNAME.isin(scorers)]
+top7Scores2 = top7Scores2.groupby("LASTNAME").sum()[['SCORE']].reset_index()
+```
+```{r}
+py$top7Scores2
+```
+
+```{python}
+sns.barplot(x="LASTNAME", y="SCORE", data=top7Scores2)
+```
+
+* Doing this to show that only 5 members consistently were on the scoring team, so can only plot their total scores for the year since they would be higher than those who only sometimes were on the scoring team.
+
+```{python}
+top7Scores.groupby("LASTNAME").count()[["SCORE"]].reset_index()
+```
+
+```{python}
+top7Scores2 = top7Scores2[~top7Scores2.LASTNAME.isin(["Jarka-Sellers", "Peske"])]
+# top7Scores2.drop([0,5])
+sns.barplot(x="LASTNAME", y="SCORE", data=top7Scores2)
+```
+
+* Uses `lubridate` to convert time string to minutes for both final time and avg pace
+
+```{r, warning=FALSE}
+MeetInfo <- MeetInfo %>%
+  mutate(TIME = time_length(ms(TIME), unit = "minute"),
+         `Avg. Mile` = time_length(ms(`Avg. Mile`), unit = "minute"))
+
+MeetInfo
+```
+
+
+```{r}
+ggplot(MeetInfo, aes(x = MEET, y = TIME, color = LASTNAME, group = LASTNAME)) + geom_point() +
+    geom_line() +
+    theme_minimal() +
+    facet_wrap(vars(LASTNAME)) +
+    theme(axis.text.x=element_text(angle = 90), legend.position ="none") +
+    scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)",
+                              "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
+```
+
+
+```{r}
+ggplot(MeetInfo, aes(x = MEET, y = `Avg. Mile`, color = LASTNAME, group = LASTNAME)) + geom_point() +
+    geom_line() +
+    theme_minimal() +
+    facet_wrap(vars(LASTNAME)) +
+    theme(axis.text.x=element_blank(), legend.position ="none") +
+    scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)","Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
+```
+
+* Returns R data frame to Pandas Dataframe, calculates min and max times for each meet and the gap between 1 and 5 runner at each meet
+
+```{python}
+avgTime = r.MeetInfo[r.MeetInfo.TEAMPLACE <= 5]
+avgTime = pd.DataFrame(avgTime.groupby("MEET").agg({"TIME": ["min", "max", "mean"]}).reset_index())
+avgTimeSummary = avgTime["TIME"].assign(gap = avgTime["TIME"]["max"] - avgTime["TIME"]["min"])
+print(avgTimeSummary)
+```
+
+```{python}
+MeetALL = pd.read_csv("MeetALL.csv")
+MeetALL = MeetALL.drop(['Unnamed: 0'], axis=1)
+```
+
+```{r}
+MeetALL <- py$MeetALL %>%
+  mutate_if(is_list, as.character)
+MeetALL
+```
+
