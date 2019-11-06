@@ -28,7 +28,7 @@ The "Mac Pack" is what the Macalester Men's Cross Country Team is fondly known a
 This reads in the csv file that was created from the python script dedicated to web scraping meet results and creating a full data frame containing information on all the meets that the men's cross country team competed in this year. It drops an unused variable left over from that process.
 
 ```{python}
-MeetInfo = pd.read_csv("MeetTimes_19.csv")
+MeetInfo = pd.read_csv("data/MeetTimes_19.csv")
 MeetInfo = MeetInfo.drop(['Unnamed: 0'], axis=1)
 ```
 
@@ -151,7 +151,7 @@ print(avgTimeSummary)
 ```
 
 ```{python}
-MeetALL = pd.read_csv("MeetALL.csv")
+MeetALL = pd.read_csv("data/MeetALL.csv")
 MeetALL = MeetALL.drop(['Unnamed: 0'], axis=1)
 ```
 

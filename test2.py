@@ -246,14 +246,12 @@ shape = MIACMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 MIACMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-
-print(MIACMeet_Mac)
 # =======================================================
 MeetTimes_19 = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac,
                           MIACMeet_Mac],
                       sort=False)
 
-MeetTimes_19.to_csv("MeetTimes_19.csv")
+MeetTimes_19.to_csv("data/MeetTimes_19.csv")
 
 
 # =======================================================
@@ -324,12 +322,12 @@ df2_18 = pd.DataFrame(dfList_meets18[1])
 df3_18 = pd.DataFrame(dfList_meets18[2])
 df4_18 = pd.DataFrame(dfList_meets18[3])
 df5_18 = pd.DataFrame(dfList_meets18[4])
-df6_181 = pd.read_csv("OSHKOSH.csv") # This is the data that was manually inputted since it was not available
+df6_181 = pd.read_csv("data/OSHKOSH.csv") # This is the data that was manually inputted since it was not available
 df6_18 = pd.DataFrame(df6_181) # Missing data read in, then passed through to be created as Data Frame
 
 # Putting all the data frames that represent meets of the year into one larger one, export to csv
 MeetTimes_18 = pd.concat([df1_18, df2_18, df3_18, df4_18, df5_18, df6_18], sort=False)
-MeetTimes_18.to_csv("MeetTimes_18.csv")
+MeetTimes_18.to_csv("data/MeetTimes_18.csv")
 
 # =======================================================
 # Data on 2017 Meets
@@ -475,7 +473,7 @@ MIAC17["FIRSTNAME"] = splitName[0]
 MIAC17["LASTNAME"] = splitName[1]
 MIAC17.drop(columns =["NAME", "X1", "X2", "X3"], inplace = True)
 
-MIAC17.to_csv("MIAC17.csv")
+MIAC17.to_csv("data/MIAC17.csv")
 '''
 
 # Saving each data frame in the list in their own objects
@@ -486,12 +484,12 @@ df4_17 = pd.DataFrame(dfList_meets17[3])
 df5_17 = pd.DataFrame(dfList_meets17[4])
 df6_17 = pd.DataFrame(dfList_meets17[5])
 df7_17 = pd.DataFrame(dfList_meets17[6])
-df8_171 = pd.read_csv("MIAC17.csv") # Reading in data web scraped from different source
+df8_171 = pd.read_csv("data/MIAC17.csv") # Reading in data web scraped from different source
 df8_17 = pd.DataFrame(df8_171) # Converting data from different source into data frame
 
 # Putting all the data frames that represent meets of the year into one larger one, export to csv
 MeetTimes_17 = pd.concat([df1_17, df2_17, df3_17, df4_17, df5_17, df6_17, df7_17, df8_17], sort=False)
-MeetTimes_17.to_csv("MeetTimes_17.csv")
+MeetTimes_17.to_csv("data/MeetTimes_17.csv")
 
 # =======================================================
 # Data on 2016 Meets
@@ -632,7 +630,7 @@ Augsburg16["FIRSTNAME"] = splitName[0]
 Augsburg16["LASTNAME"] = splitName[1]
 Augsburg16.drop(columns =["NAME"], inplace = True)
 
-Augsburg16.to_csv("Augsburg16.csv")
+Augsburg16.to_csv("data/Augsburg16.csv")
 '''
 
 # Saving each data frame in the list in their own objects
@@ -643,12 +641,12 @@ df4_16 = pd.DataFrame(dfList_meets16[3])
 df5_16 = pd.DataFrame(dfList_meets16[4])
 df6_16 = pd.DataFrame(dfList_meets16[5])
 df7_16 = pd.DataFrame(dfList_meets16[6])
-df8_161 = pd.read_csv("Augsburg16.csv") # Reading in data web scraped from different source
+df8_161 = pd.read_csv("data/Augsburg16.csv") # Reading in data web scraped from different source
 df8_16 = pd.DataFrame(df8_161) # Converting data from different source into data frame
 
 # Putting all the data frames that represent meets of the year into one larger one, export to csv
 MeetTimes_16 = pd.concat([df1_16, df2_16, df3_16, df4_16, df5_16, df6_16, df7_16, df8_16], sort=False)
-MeetTimes_16.to_csv("MeetTimes_16.csv")
+MeetTimes_16.to_csv("data/MeetTimes_16.csv")
 
 # =======================================================
 # Putting them all together
@@ -656,5 +654,5 @@ MeetTimes_16.to_csv("MeetTimes_16.csv")
 
 # Compiling the four csv files created above into a full one to have all data from four years in one, saved to csv
 MeetALL = pd.concat([MeetTimes_16, MeetTimes_17, MeetTimes_18, MeetTimes_19], sort= False)
-MeetALL.to_csv("MeetALL.csv")
+MeetALL.to_csv("data/MeetALL.csv")
 
