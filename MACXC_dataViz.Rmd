@@ -145,12 +145,16 @@ ggplot(MeetInfo, aes(x = MEET, y = `Avg. Mile`, color = LASTNAME, group = LASTNA
 
 ```{python}
 avgTime = r.MeetInfo[r.MeetInfo.TEAMPLACE <= 5]
-avgTime = pd.DataFrame(avgTime.groupby("MEET").agg({"TIME": ["min", "max", "mean"]}).reset_index())
-avgTimeSummary = avgTime["TIME"].assign(gap = avgTime["TIME"]["max"] - avgTime["TIME"]["min"])
-print(avgTimeSummary)
+avgTime = pd.DataFrame(avgTime.groupby("MEET").
+  agg({"TIME": ["min", "max", "mean"]}).
+  rename(columns = {"min":"Time_min", "max":"Time_max", "mean": "AvgTime"}))
+
+avgTimeSummary = avgTime["TIME"].assign(gap = avgTime["TIME"]["Time_max"] - avgTime["TIME"]["Time_min"])
+
+avgTimeSummary = avgTimeSummary.reset_index()
 ```
 ```{r}
-py$avgTime
+py$avgTimeSummary
 ```
 
 
