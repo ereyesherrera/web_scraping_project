@@ -68,9 +68,7 @@ ggplot(MeetInfo, aes(x = MEET, y = TEAMPLACE, label = LASTNAME, color = LASTNAME
 ```{python}
 runnerMeets = pd.DataFrame(MeetInfo.LASTNAME.value_counts())
 runnerMeets.columns = ["Count"]
-```
-```{r}
-py$runnerMeets
+runnerMeets
 ```
 
 * Takes the dataframe above, filters so that it only has those where count = 6, then gets the names of those runners by using `.index` and saving them into a list
@@ -89,9 +87,7 @@ scorers
 top7Scores = MeetInfo[MeetInfo.TEAMPLACE.isin(range(1,8))]
 top7Scores2 = top7Scores[top7Scores.LASTNAME.isin(scorers)]
 top7Scores2 = top7Scores2.groupby("LASTNAME").sum()[['SCORE']].reset_index()
-```
-```{r}
-py$top7Scores2
+top7Scores2
 ```
 
 ```{python}
@@ -125,7 +121,7 @@ MeetInfo
 ggplot(MeetInfo, aes(x = MEET, y = TIME, color = LASTNAME, group = LASTNAME)) + geom_point() +
     geom_line() +
     theme_minimal() +
-    facet_wrap(vars(LASTNAME)) +
+    facet_wrap(vars(LASTNAME), ncol = 4) +
     theme(axis.text.x=element_text(angle = 90), legend.position ="none") +
     scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)",
                               "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
@@ -137,7 +133,7 @@ ggplot(MeetInfo, aes(x = MEET, y = `Avg. Mile`, color = LASTNAME, group = LASTNA
     geom_line() +
     theme_minimal() +
     facet_wrap(vars(LASTNAME)) +
-    theme(axis.text.x=element_blank(), legend.position ="none") +
+    theme(axis.text.x=element_text(angle = 90), legend.position ="none") +
     scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)","Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
 ```
 
@@ -152,15 +148,18 @@ avgTime = pd.DataFrame(avgTime.groupby("MEET").
 avgTimeSummary = avgTime["TIME"].assign(gap = avgTime["TIME"]["Time_max"] - avgTime["TIME"]["Time_min"])
 
 avgTimeSummary = avgTimeSummary.reset_index()
+avgTimeSummary
 ```
-```{r}
-py$avgTimeSummary
+
+```{python}
+# Getting average gap between 1st and 5th man for 2019
+avgTimeSummary["gap"].mean().round(4)
 ```
 
 
 ```{python}
 MeetALL = pd.read_csv("data/MeetALL.csv")
-MeetALL = MeetALL.drop(['Unnamed: 0'], axis=1)
+MeetALL = MeetALL.drop(['Unnamed: 0', 'Unnamed: 0.1'], axis=1)
 ```
 
 ```{r}
@@ -170,3 +169,109 @@ MeetALL <- py$MeetALL %>%
 MeetALL
 ```
 
+```{r}
+# Converting Time and Average Mile columns to integers using lubridate
+MeetALL <- MeetALL %>%
+  mutate(TIME = time_length(ms(TIME), unit = "minute"),
+         `Avg. Mile` = time_length(ms(`Avg. Mile`), unit = "minute"))
+
+MeetALL
+```
+
+
+```{python}
+# Calling data frame back into python
+
+avgTimeALL = r.MeetALL[r.MeetALL.TEAMPLACE <= 5]
+avgTimeALL = pd.DataFrame(avgTimeALL.groupby(["MEET", "DATE"]).
+  agg({"TIME": ["min", "max", "mean"]}).
+  rename(columns = {"min":"Time_min", "max":"Time_max", "mean": "AvgTime"}))
+
+avgTimeSummaryALL = avgTimeALL["TIME"].assign(gap = avgTimeALL["TIME"]["Time_max"] - avgTimeALL["TIME"]["Time_min"])
+avgTimeSummaryALL = avgTimeSummaryALL.reset_index()
+avgTimeSummaryALL
+```
+
+```{python}
+gapsALL = pd.DataFrame(avgTimeSummaryALL.groupby("DATE")
+  .mean()["gap"]).reset_index()
+  
+plot = sns.barplot(x="DATE", y = "gap", data = gapsALL, order= [2018.0, 2019.0, 2016.0, 2017.0])
+plot.set_title("Average Gap (min) between 1st Runner and 5th Runner", fontsize = 15)
+plot.set_xlabel("Year")
+plot.set_ylabel("Gap (Minutes)")
+```
+
+```{r}
+py$avgTimeSummaryALL %>%
+  ggplot(aes(x = MEET, y = AvgTime, color = factor(DATE), group = DATE))+
+  geom_line() +
+  geom_point() +
+  facet_grid(rows = vars(DATE)) +
+  labs(x = "Meet", y = "Average Time (minutes)", color = "Year", title = "Average Time", subtitle = "For Every Meet in a Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_y_continuous(breaks = seq(20,32,2)) +
+  scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Augsburg Open", "Running of the Cows (Carleton)",
+                              "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "Falcon Invite", "River Falls", 
+                              "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
+```
+
+```{r}
+py$avgTimeSummaryALL %>%
+  ggplot(aes(x = MEET, y = gap, color = factor(DATE), group = DATE))+
+  geom_line() +
+  geom_point() +
+  facet_grid(rows = vars(DATE), ) +
+  labs(x = "Meet", y = "Gap (minutes)", color = "Year", title = "Gap Between 1st and 5th Runner", subtitle = "For Every Meet in a Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Augsburg Open", "Running of the Cows (Carleton)",
+                              "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "Falcon Invite", "River Falls", 
+                              "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
+```
+
+```{python}
+class_2020 = ["Reyes Herrera", "Lepak", "Jarka-Sellers", "Milner", "Bildsten", "O'Donnell-Hoff", "Hernandez"]
+```
+
+```{python}
+MeetALL = r.MeetALL
+
+seniors = MeetALL[MeetALL.LASTNAME.isin(class_2020)]
+seniors
+```
+
+```{r}
+py$seniors %>%
+  ggplot(aes(x = MEET, y = TIME, color = LASTNAME, group = LASTNAME)) +
+  geom_line() +
+  geom_point() +
+  facet_grid(rows = vars(DATE), cols = vars(LASTNAME)) +
+  scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Augsburg Open", "Running of the Cows (Carleton)",
+                              "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "Falcon Invite", "River Falls", 
+                              "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
+```
+
+```{python}
+seniorsAvg = seniors.groupby(["LASTNAME", "DATE"]).mean()["TIME"]
+seniorsAvg = seniorsAvg.reset_index()
+seniorsAvg
+```
+
+```{r}
+py$seniorsAvg %>%
+  ggplot(aes(x = factor(DATE), y = TIME, color = LASTNAME, group = LASTNAME)) +
+  geom_line() +
+  geom_point()
+```
+
+```{python}
+# Filter out non 8k
+
+non8k = ["Summit Cup", "Augsburg Open", "Twin Cities Invitational"]
+```
+
+Add column based on conditions in pandas
+
+https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column

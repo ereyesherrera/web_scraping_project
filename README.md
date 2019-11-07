@@ -43,7 +43,9 @@
 * http://queirozf.com/entries/pandas-dataframe-groupby-examples
 * https://stackoverflow.com/questions/46306786/flatten-multi-index-pandas-dataframe-where-column-names-become-values/46306841
 * https://stackoverflow.com/questions/38935541/what-is-the-pandas-equivalent-of-dplyr-summarize-aggregate-by-multiple-functions
-
+* https://stackoverflow.com/questions/31632637/label-axes-on-seaborn-barplot
+* https://stackoverflow.com/questions/12065885/filter-dataframe-rows-if-value-in-column-is-in-a-set-list-of-values/12065904
+* https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
 
 **Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
 
