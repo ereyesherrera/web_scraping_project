@@ -18,6 +18,7 @@
 
 **Learning Pandas, Seaborn, and other Modules:**
 
+* https://pandas.pydata.org/pandas-docs/stable/
 * https://datacarpentry.org/python-ecology-lesson/03-index-slice-subset/
 * http://www.datasciencemadesimple.com/append-concatenate-rows-python-pandas-row-bind/
 * https://stackoverflow.com/questions/45236592/why-is-rpy2-not-installing-in-my-osx-sierra-terminal
@@ -46,6 +47,7 @@
 * https://stackoverflow.com/questions/31632637/label-axes-on-seaborn-barplot
 * https://stackoverflow.com/questions/12065885/filter-dataframe-rows-if-value-in-column-is-in-a-set-list-of-values/12065904
 * https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
+* https://stackoverflow.com/questions/36921951/truth-value-of-a-series-is-ambiguous-use-a-empty-a-bool-a-item-a-any-o
 
 **Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
 
