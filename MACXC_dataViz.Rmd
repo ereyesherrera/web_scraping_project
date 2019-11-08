@@ -415,9 +415,9 @@ seniors
 From there, we can filter using the new `Type` column and only selecting 8K races. Afterwards, we can group by runner and find the `max` and `min` for final race time.
 
 ```{python}
-seniors_best = seniors[seniors["Type"] == "8K"]
+seniors_8K = seniors[seniors["Type"] == "8K"]
 
-seniors_best = seniors_best.groupby("LASTNAME").agg(
+seniors_best = seniors_8K.groupby("LASTNAME").agg(
   Slowest_Time = ("TIME", "max"),
   Fastest_Time = ("TIME", "min")).reset_index()
 
@@ -425,12 +425,28 @@ seniors_best
 ```
 
 ```{python}
-seniors_best.set_index("LASTNAME").stack().reset_index()
-sns.barplot(x="LASTNAME", y=0, hue= "level_1", data = seniors_best.set_index("LASTNAME").stack().reset_index())
+# Pivot Longer
+seniors_best.set_index("LASTNAME").stack().reset_index().rename(columns = {0:"Race Time", "level_1":"Type"})
+
+sns.barplot(x="LASTNAME", y="Race Time", hue= "Type", data= seniors_best.set_index("LASTNAME").stack().reset_index().rename(columns = {0:"Race Time", "level_1":"Type"}))
 ```
+
+```{r}
+# Using R to see Meet and Date when finding min and max
+py$seniors_8K %>%
+  group_by(LASTNAME) %>%
+  slice(which.min(TIME)) %>%
+  select(LASTNAME, MEET, TIME, DATE)
+
+py$seniors_8K %>%
+  group_by(LASTNAME) %>%
+  slice(which.max(TIME)) %>%
+  select(LASTNAME, MEET, TIME, DATE)
+```
+
 
 ```{python}
 #Range of times for class 0f 2020 throughout the years
-sns.boxplot(x= "LASTNAME", y= "TIME", data = seniors)
+sns.boxplot(x= "LASTNAME", y= "TIME", data = seniors_8K)
 ```
 

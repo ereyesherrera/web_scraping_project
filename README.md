@@ -48,12 +48,10 @@
 * https://stackoverflow.com/questions/12065885/filter-dataframe-rows-if-value-in-column-is-in-a-set-list-of-values/12065904
 * https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
 * https://stackoverflow.com/questions/36921951/truth-value-of-a-series-is-ambiguous-use-a-empty-a-bool-a-item-a-any-o
-
-**Code that I modified in  order to convert runners' times into floats, seconds, etc.:**
-
 * https://www.inchcalculator.com/minutes-to-time-calculator/
 * https://stackoverflow.com/questions/6402812/how-to-convert-an-hmmss-time-string-to-seconds-in-python/6402934
 * https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html#missing-data
+* https://stmorse.github.io/journal/tidyverse-style-pandas.html
 
 **Websites where data was retrieved:**
 
