@@ -16,9 +16,12 @@
 
 * https://beautiful-soup-4.readthedocs.io/en/latest/
 
-**Learning Pandas, Seaborn, and other Modules:**
-
+**Pandas and Seaborn Documentations**
 * https://pandas.pydata.org/pandas-docs/stable/
+* https://seaborn.pydata.org/
+
+**Online Help**
+
 * https://datacarpentry.org/python-ecology-lesson/03-index-slice-subset/
 * http://www.datasciencemadesimple.com/append-concatenate-rows-python-pandas-row-bind/
 * https://stackoverflow.com/questions/45236592/why-is-rpy2-not-installing-in-my-osx-sierra-terminal
@@ -52,6 +55,10 @@
 * https://stackoverflow.com/questions/6402812/how-to-convert-an-hmmss-time-string-to-seconds-in-python/6402934
 * https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html#missing-data
 * https://stmorse.github.io/journal/tidyverse-style-pandas.html
+* https://cran.r-project.org/web/packages/egg/vignettes/Ecosystem.html
+* https://yihui.name/knitr/options/#chunk-options
+* https://blogdown-demo.rbind.io/2018/01/31/gif-animations/
+* https://stackoverflow.com/questions/18884778/poor-resolution-in-knitr-using-rmd
 
 **Websites where data was retrieved:**
 

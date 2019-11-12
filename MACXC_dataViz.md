@@ -1,5 +1,5 @@
 ---
-title: "Data Summary and Visualization of the MAC PACK '19"
+title: "Data Summary and Visualization of the MAC PACK 2016-2019"
 author: "Edwin Reyes Herrera"
 date: "11/5/2019"
 output: 
@@ -9,7 +9,7 @@ output:
 ---
 
 ```python
-from tabulate import tabulate
+# Loading Python Modules
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -20,16 +20,20 @@ sns.set(style="whitegrid")
 
 
 ```r
+# Loading R libraries
 library(tidyverse)
 library(lubridate)
 library(reticulate)
 ```
 
-The "Mac Pack" is what the Macalester Men's Cross Country Team is fondly known as, given to our current coach Matt Haugen. He deems the "Mac Pack Era" as the time in which he has been head coach, which has been since the early 2000s. The team nickname is a play-on-words to indicate that we run in packs, which is important in cross country since the goal is to try to minimize the number of points the team collects in a meet.
+
+
+
+The "Mac Pack" is what the Macalester Men's Cross Country Team is fondly known as, given to our current coach Matt Haugen. He deems the "Mac Pack Era" as the time in which he has been head coach, which has been since the early 2000s. The team nickname is a play-on-words to indicate that we run in packs, which is important in cross country since the goal is to try to minimize the number of points the team collects in a meet. This analysis uses data on the Macalester's men's cross country team results between 2016 and 2019 that was compiled from the [TFRRS website](https://www.tfrrs.org/index.html) using `Beautiful Soup` in Python. Inspiration from this project stemmed from the various race reports that our coach would send the team after every meet, while the methods to actually implement this were inspired from this [Medium website post](https://medium.com/@viritaromero/web-scraping-5k-race-results-with-python-and-beautifulsoup-d08eba5624eb).
 
 # Analyzing the 2019 Cross Country Season
 
-This reads in the csv file that was created from the python script dedicated to web scraping meet results and creating a full data frame containing information on all the meets that the men's cross country team competed in this year. It drops an unused variable left over from that process.
+This reads in the csv file that was created from the Python script dedicated to web scraping meet results and creating a full data frame containing information on all the meets that the men's cross country team competed in this year. It drops an unused variable left over from that process.
 
 
 ```python
@@ -37,10 +41,11 @@ MeetInfo = pd.read_csv("data/MeetTimes_19.csv")
 MeetInfo = MeetInfo.drop(['Unnamed: 0'], axis=1)
 ```
 
-After reading the data frame using python's `pandas` module, we are able to access it in R using the `reticulate` package and converting some columns into characters, in which Python reads in as a list. Displayed below is the data frame of 2019 results that was scraped from the Python script using `Beautiful Soup`.
+After reading the data frame using python's `pandas` module, we are able to access it in R using the `reticulate` package and convert some columns into characters, in which Python reads in as a list. Displayed below is the data frame of 2019 results that was scraped from the Python script using `Beautiful Soup`.
 
 
 ```r
+# 2019 Results
 MeetInfo <- py$MeetInfo %>%
   mutate_if(is.list,as.character)
 
@@ -53,10 +58,11 @@ MeetInfo
   </script>
 </div>
 
-Uisng Python's `seaborn` moduel, we can begon to visualize every runner's performance throughout the year. Below is a line plot showing the place each runner was on the team for every meet. The lower the place, the faster the athlete ran. We can notice that some athletes only have few data points on their graph - this reflects a missed meet. Looking at my own performance, I can see that I was consistently the same place on the team (4th) for all but one meet.
+Using Python's `seaborn` module, we can begin to visualize every runner's performance throughout the year. Below is a line plot showing the place each runner was on the team for every meet. The lower the place, the faster the athlete ran. We can notice that some athletes only have few data points on their graph - this reflects a missed meet. Looking at my own performance, I can see that I was consistently the same place on the team (4th) for all but one meet.
 
 
 ```python
+# Runner Performance 2019
 g = sns.FacetGrid(MeetInfo, col="LASTNAME", hue = "LASTNAME", col_wrap=5)
 (g.map(plt.plot,"MEET", "TEAMPLACE", marker=".")
 .set_axis_labels("", "Team Place")
@@ -64,16 +70,16 @@ g = sns.FacetGrid(MeetInfo, col="LASTNAME", hue = "LASTNAME", col_wrap=5)
 ```
 
 ```
-## <seaborn.axisgrid.FacetGrid object at 0x11e74e650>
+## <seaborn.axisgrid.FacetGrid object at 0x1285669d0>
 ```
 
 ```python
 plt.show()
 ```
 
-<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-5-1.png" width="1440" />
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-6-1.png" width="1440" style="display: block; margin: auto;" />
 
-Moreover, we can continue to visualize how each runner performed by plotting every runner's place on a scatterplot using the meets on the x-axis. In this plot, we can better see how every runner performed relative to all other teammates and also see which runners performed better than others in a given meet. For the most part, we can see those runners that were placed 1st through 5th remained consistent for the entire year, only with some variation. This is neat because it uses `ggplot` to create a visualization from a data frame that was created in Python.
+Moreover, we can continue to visualize how each runner performed by plotting every runner's place on a scatter plot using the meets on the x-axis. In this plot, we can better see how every runner performed relative to all other teammates and also see which runners performed better than others in a given meet. For the most part, we can see those runners that were placed 1st through 5th remained consistent for the entire year, only with some variation. This is neat because it uses `ggplot` in R to create a visualization from a data frame that was created in Python.
 
 
 ```r
@@ -89,7 +95,7 @@ ggplot(MeetInfo, aes(x = MEET, y = TEAMPLACE, label = LASTNAME, color = LASTNAME
                                 "Jim Drews Invitational (Lacrosse)", "MIAC"))
 ```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 From the plot above, we can see that there were some meets in which not all runners competed. As such, the Python code below returns the count for the number of meets that every runner competed in. We can see some variation in this; if a runner ran seven meets, that means that they ran in all of the "regular season" meets, plus the Central Regional Meet, in which you have to qualify for. Summarizing this information was converted back into a `pandas` data frame for ease of manipulation later.
 
@@ -104,44 +110,46 @@ runnerMeets
 ```
 ##                 Count
 ## Milner              6
-## O'Donnell-Hoff      6
-## Reyes Herrera       6
-## Jarka-Sellers       6
 ## Peske               6
-## Bildsten            6
-## Baumeister          6
-## Johnson             6
-## Mayse               6
-## Lepak               6
 ## Hernandez           6
+## Baumeister          6
+## O'Donnell-Hoff      6
+## Mayse               6
+## Reyes Herrera       6
+## Lepak               6
+## Jarka-Sellers       6
+## Johnson             6
+## Bildsten            6
 ## Kerr                5
-## Hayes               4
 ## Rachlin             4
-## Levy                3
+## Hayes               4
 ## Lewis-Norelle       3
-## Morefield           3
 ## Baldus              3
+## Levy                3
+## Morefield           3
 ## Hunsanger           3
 ```
 
-I was interested in analyzing how many points every runner that ran in every meet (inlcuding the Central Region meet) this year accumulated. First, I retrieved a list of the names of the runners that ran in all 7 meets by filtering and saved it into an object called `scorers`. The `.index` was used to extract the names, as the names were being used as the index of the rows in the above data frame.
+I was interested in analyzing how many points every runner that ran in every meet (including the Central Region meet) this year accumulated. First, I retrieved a list of the names of the runners that ran in all 7 meets by filtering and saved it into an object called `scorers`. The `.index` was used to extract the names, as the names were being used as the index of the rows in the above data frame.
 
 
 ```python
+# List of runners that ran all seven meets
 scorers = list(runnerMeets[runnerMeets.Count == 6].index)
 scorers
 ```
 
 ```
-## ['Milner', "O'Donnell-Hoff", 'Reyes Herrera', 'Jarka-Sellers', 'Peske', 'Bildsten', 'Baumeister', 'Johnson', 'Mayse', 'Lepak', 'Hernandez']
+## ['Milner', 'Peske', 'Hernandez', 'Baumeister', "O'Donnell-Hoff", 'Mayse', 'Reyes Herrera', 'Lepak', 'Jarka-Sellers', 'Johnson', 'Bildsten']
 ```
 
-Then, I took the original `MeetInfo` data set that has all the information of 2019 meets and filtered to only reflect runners that were in the top 5 runner for the team in each meet. This reflects those runners that contributed to the overall team score for each meet since only the top 5 runners on each team score. This takes advantage of the `.isin()` function of pandas, which looks to filter the column of `TEAMPLACE` satisfy the condition that it is between 1 and 5.
+Then, I took the original `MeetInfo` data set that has all the information of 2019 meets and filtered to only reflect runners that were in the top 5 for the team in each meet. This reflects those runners that contributed to the overall team score for each meet since only the top 5 runners on each team score. This takes advantage of the `.isin()` function of pandas, which looks to filter the column of `TEAMPLACE` satisfy the condition that it is between 1 and 5.
 
 After, we filter again, but this time use the `scorers` list created above to filter and only keep the names of the runners that were in the top 5 runners on the team, and now also that ran in all 7 meets of the year. Finally, we summed up the total score each runner accumulated throughout the year. The `reset_index()` converts the names that are the row's index to a column.
 
 
 ```python
+# Scores of Top 5 runners
 top5Scores = MeetInfo[MeetInfo.TEAMPLACE.isin(range(1,6))]
 top5Scores = top5Scores[top5Scores.LASTNAME.isin(scorers)]
 top5Scores = top5Scores.groupby("LASTNAME").sum()[['SCORE']].reset_index()
@@ -157,23 +165,28 @@ top5Scores
 ## 4   Reyes Herrera  370.0
 ```
 
-We can also visualize the summary output above in a barplot. What we can deduce from the summary table and the barplot is that these were the runners that were consistently in the top 5 runners on the team for every meet. It was important to only consider those runners that ran in all meets. This is because if there was a runner that only ran in some meets, and was a scoring runner, then their point accumulation would be lower than everyone else's. 
+We can also visualize the summary output above in a bar plot. What we can deduce from the summary table and the bar plot is that these were the runners that were consistently in the top 5 runners on the team for every meet. It was important to only consider those runners that ran in all meets. This is because if there was a runner that only ran in some meets, and was a scoring runner, then their point accumulation would be lower than everyone else's. 
 
-In addition, we can also see that their total point accumulation reflects what place on the team they usually came in at. What is interesting to note is that the points that Lepak accumulated isn't that much more less than the points Johnson accumulated. This means that Lepak was not always the number one runner and sometimes placed lower on the team, which contributed to almost having the same total points as Johnson. As such, this plot does a great job of indicating the trajectory of the runners and the place they were on the team. In the end, taking into consideration all meets, Lepak was the number one runner for the 2019 year even if he did have some races where he did not finish number one.
+In addition, we can also see that their total point accumulation reflects what place on the team they usually came in at. What is interesting to note is that the points that Lepak accumulated isn't that much less than the points Johnson accumulated. This means that Lepak was not always the number one runner and sometimes placed lower on the team, which contributed to almost having the same total points as Johnson. As such, this plot does a great job of indicating the trajectory of the runners and the place they were on the team. In the end, taking into consideration all meets, Lepak was the number one runner for the 2019 year even if he did have some races where he did not finish number one.
 
 
 ```python
-sns.barplot(x="LASTNAME", y="SCORE", data=top5Scores)
+# Points for Top 5 runners
+plot = sns.barplot(x="LASTNAME", y="SCORE", data=top5Scores)
+plot.set_title("Points Accumulated at 2019 Meets for Top 5 Runners", fontsize = 15)
+plot.set_xlabel("Runner")
+plot.set_ylabel("Points")
 ```
 
-<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-10-1.png" width="1440" />
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-11-1.png" width="1440" style="display: block; margin: auto;" />
 
-From there, I was also curious to analyze everyone's perfromance based on their times for each race. The problem was that when the data was scraped, the times were saved as strings, so there was a need to convert these strings into numeric data. Luckily, R has a package called `lubridate` that is exceptional for working with dates and times.
+From there, I was also curious to analyze everyone's performance based on their times for each race. The problem was that when the data was scraped, the times were saved as strings, so there was a need to convert these strings into numeric data. Luckily, R has a package called `lubridate` that is exceptional for working with dates and times.
 
 Using the Python data frame, we update the `MeetInfo` using R and `lubridate` to convert the times reflected in the variables of `TIME` (final time for a meet) and `Avg. Mile` (average mile during a race) from strings to numeric data. We indicate that we want our data to be converted to minutes.
 
 
 ```r
+# Converting time strings into minutes
 MeetInfo <- MeetInfo %>%
   mutate(TIME = time_length(ms(TIME), unit = "minute"),
          `Avg. Mile` = time_length(ms(`Avg. Mile`), unit = "minute"))
@@ -187,7 +200,7 @@ MeetInfo
   </script>
 </div>
 
-Using the updated dateframe above, we are able to make a similar line plot to the one above, this time plotting every runner's trajectory based on their total time for a race. It is important to note that not all races were the same distance - some were only 4 miles, while the typical race is an 8k. To account for this (i.e. avoid any misleading information on the plot when someone's time suddenly decreases), I ordered the x-axis so as to place those meets that were only 4 miles at the beginning.
+Using the updated date frame above, we are able to make a similar line plot to the one above, this time plotting every runner's trajectory based on their total time for a race. It is important to note that not all races were the same distance - some were only 4 miles, while the typical race is an 8K. To account for this (i.e. avoid any misleading information on the plot when someone's time suddenly decreases), I ordered the x-axis so as to place those meets that were only 4 miles at the beginning.
 
 
 ```r
@@ -196,16 +209,14 @@ ggplot(MeetInfo, aes(x = MEET, y = TIME, color = LASTNAME, group = LASTNAME)) + 
     geom_line() +
     theme_minimal() +
     facet_wrap(vars(LASTNAME), ncol = 4) +
+  labs(x = "Meet", y = "Race Time", title = "Race Time for Every 2019 Teammate",
+       subtitle = "Every Meet") +
     theme(axis.text.x=element_text(angle = 90), legend.position ="none") +
     scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)",
                               "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
 ```
 
-```
-## Warning: Removed 1 rows containing missing values (geom_point).
-```
-
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 Another way to control for difference in distances for meets is to plot a runner's trajectory using their average mile pace for a race. In this way, all races are on the same scale and this gives a better perspective on whether a runner ran faster or slower relative to other meets. Looking at my own progression, I generally became faster as the year went on, with a small increase in time in the second and 3rd meets. (Note: the order of the x-axis also reflects the order of meets that we competed in, by chance! So this does in fact show progression throughout the year in chronological order). The absence of dots or breaks in the line show missed meets or DNFs (did not finish).
 
@@ -216,21 +227,19 @@ ggplot(MeetInfo, aes(x = MEET, y = `Avg. Mile`, color = LASTNAME, group = LASTNA
     geom_line() +
     theme_minimal() +
     facet_wrap(vars(LASTNAME)) +
+    labs(x = "Meet", y = "Average Mile Pace", 
+         title = "Average Mile Pace for Every 2019 Teammate", subtitle = "Every Meet") +
     theme(axis.text.x=element_text(angle = 90), legend.position ="none") +
     scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Running of the Cows (Carleton)","Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "MIAC"))
 ```
 
-```
-## Warning: Removed 1 rows containing missing values (geom_point).
-```
-
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 Another neat thing about this analysis is that even though I changed the original data set that was created in Python in R, I am able to return that data frame so that the Python engine can begin using it again, which is what is done below.
 
 Now that we have visualized every runner's individual performance for the 2019 year, I wanted to analyze the time gap between the first and the 5th runner on the team. Generally, the bigger the gap, the more points that the team accumulates and the worse that the team places overall in a meet.
 
-First, we return the updated data frame of `MeetInfo` into python after manipulating it in Python and assing it to the variable `avgTime` anf filter to only have the top 5 runners for each meet. Then, we group by every meet and use `pandas` `agg()` function to apply three summary statistics for each meet: the fastest time at every meet (min), the slowest time at every meet (max), and the average time at every meet (mean). Then we take advantage of `pandas` `.assign()` function to create a new variable called `gap` that takes the difference in the slowest and fastest time to find the gap in minutes for every meet.
+First, we return the updated data frame of `MeetInfo` into Python after manipulating it in Python and assign it to the variable `avgTime` and filter to only have the top 5 runners for each meet. Then, we group by every meet and use `pandas` `agg()` function to apply three summary statistics for each meet: the fastest time at every meet (min), the slowest time at every meet (max), and the average time at every meet (mean). Then we take advantage of `pandas` `.assign()` function to create a new variable called `gap` that takes the difference in the slowest and fastest time to find the gap in minutes for every meet.
 
 We can observe that the team had the smallest gap between the first and last runner that scored in the Twin Cities Invitational, which was our first race of the year. The gap is about 0.75 minutes, which is about 45 seconds. This is intuitive considering that this was also the meet in which we placed the highest (2nd place overall). This metric, again, controls for the fact that some races were different distances.
 
@@ -238,6 +247,8 @@ Looking at the races that were 8k distances, we see that the best team finish wa
 
 
 ```python
+# Min, max, Average Time and Gap for each meet in 2019
+
 avgTime = r.MeetInfo[r.MeetInfo.TEAMPLACE <= 5]
 avgTime = pd.DataFrame(avgTime.groupby("MEET").
   agg({"TIME": ["min", "max", "mean"]}).
@@ -279,6 +290,7 @@ First, we load the data set containing information on all meets for the four yea
 
 
 ```python
+# Results for 2016-2019 Seasons
 MeetALL = pd.read_csv("data/MeetALL.csv")
 MeetALL = MeetALL.drop(['Unnamed: 0', 'Unnamed: 0.1'], axis=1)
 ```
@@ -287,6 +299,7 @@ Then we also create it as an R data frame to be able to easily manipulate it.
 
 
 ```r
+# Results for 2016-2019 seasons
 MeetALL <- py$MeetALL %>%
   mutate_if(is_list, as.character)
 
@@ -332,6 +345,8 @@ Then, the updated `MeetALL` data frame is called back into Python, and we find t
 
 ```python
 # Calling data frame back into python
+# Filtering Top 5 Runners
+# Finding summary statistics
 
 avgTimeALL = r.MeetALL[r.MeetALL.TEAMPLACE <= 5]
 avgTimeALL = pd.DataFrame(avgTimeALL.groupby(["MEET", "DATE"]).agg(
@@ -381,12 +396,13 @@ avgTimeSummaryALL
 ## [28 rows x 7 columns]
 ```
 
-Now that we have information on all four years, we can determine which Mac Pack team in this four year span was the "best" in terms of gap between the first and last runners who score. We group by year and find the average gap for every meet for every year and visualize the results in a barplot. We can see that during my four years at Macalester, the "best" team was in 2018 with a gap of about 50 seconds, followed by the 2019 team with an average gap of about 1 minute and 15 seconds.
+Now that we have information on all four years, we can determine which Mac Pack team in this four year span was the "best" in terms of gap between the first and last runners who score. We group by year and find the average gap for every meet for every year and visualize the results in a bar plot. We can see that during my four years at Macalester, the "best" team was in 2018 with a gap of about 50 seconds, followed by the 2019 team with an average gap of about 1 minute and 15 seconds.
 
 I was wondering which team also contributed the least amount of points throughout the year, but teams were unable to be compared since some teams ran in more meets than others, so the point accumulation would not be representative of performance in this case.
 
 
 ```python
+# Calculating Average Gap between runners for each Year
 gapsALL = pd.DataFrame(avgTimeSummaryALL.groupby("DATE")
   .mean()["gap"]).reset_index()
   
@@ -396,14 +412,15 @@ plot.set_xlabel("Year")
 plot.set_ylabel("Gap (Minutes)")
 ```
 
-<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-20-1.png" width="1440" />
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-21-1.png" width="1440" style="display: block; margin: auto;" />
 
-We can also visualize race performance using the data we gathered above on average time and average gap for every meet for every year. The plot below shows the average time for every meet across all four years. Again, those races that were not an 8k distance (now including 4 mile and 5k races) were place at the beginning fo the plot (going left to right) to avoid any misonceptions about the time.
+We can also visualize race performance using the data we gathered above on average time and average gap for every meet for every year. The plot below shows the average time for every meet across all four years. Again, those races that were not an 8k distance (now including 4 mile and 5k races) were place at the beginning of the plot (going left to right) to avoid any misconceptions about the time.
 
-In this plot, we can observe that the 2018 and 2019 years ran less in meets than in 2017 or 2016 teams, which may be a factor in why their gaps were much better. The 2018 team's times stayed very consistent, while the 2019 team had slightly more variability in times. The second plot communicates the same information except all the years are visualized on the same plot, making it easier for comparison
+In this plot, we can observe that the 2018 and 2019 years ran less in meets than in 2017 or 2016 teams, which may be a factor in why their gaps were much better. The 2018 team's times stayed very consistent, while the 2019 team had slightly more variability in times. The second plot communicates the same information except all the years are visualized on the same plot, making it easier for comparison.
 
 
 ```r
+# Average Race Time Plot across Years
 py$avgTimeSummaryALL %>%
   ggplot(aes(x = MEET, y = Time_avg, color = factor(DATE), group = DATE))+
   geom_line() +
@@ -416,11 +433,7 @@ py$avgTimeSummaryALL %>%
   scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Augsburg Open", "Running of the Cows (Carleton)",
                               "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "Falcon Invite", "River Falls", 
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
-```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
-
-```r
 py$avgTimeSummaryALL %>%
   ggplot(aes(x = MEET, y = Time_avg, color = factor(DATE), group = DATE))+
   geom_line() +
@@ -434,12 +447,13 @@ py$avgTimeSummaryALL %>%
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
 ```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /><img src="MACXC_dataViz_files/figure-html/unnamed-chunk-22-2.png" style="display: block; margin: auto;" />
 
-Furthermore, we can also create a visualization of all the time gaps for every meet in every year. Interestingly, we see that the best team finish in this four year span was in 2018 for the Griak meet, where the gap was only 30 seconds. We can also observe that the gaps in 2018 alwways were around a minute or below, while the gaps in 2019 were variable and consistently over a minute. Again, the second plot allows for more concrete comparisons.
+Furthermore, we can also create a visualization of all the time gaps for every meet in every year. Interestingly, we see that the best team finish in this four year span was in 2018 for the Griak meet, where the gap was only 30 seconds. We can also observe that the gaps in 2018 always were around a minute or below, while the gaps in 2019 were variable and consistently over a minute. Again, the second plot allows for more concrete comparisons.
 
 
 ```r
+# Average Gap across years plot
 py$avgTimeSummaryALL %>%
   ggplot(aes(x = MEET, y = gap, color = factor(DATE), group = DATE))+
   geom_line() +
@@ -451,11 +465,7 @@ py$avgTimeSummaryALL %>%
   scale_x_discrete(limits = c("Twin Cities Invitational", "Summit Cup", "Augsburg Open", "Running of the Cows (Carleton)",
                               "Blugold Invitational", "Jim Drews Invitational (Lacrosse)", "Falcon Invite", "River Falls", 
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
-```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
-
-```r
 py$avgTimeSummaryALL %>%
   ggplot(aes(x = MEET, y = gap, color = factor(DATE), group = DATE))+
   geom_line() +
@@ -468,12 +478,13 @@ py$avgTimeSummaryALL %>%
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
 ```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /><img src="MACXC_dataViz_files/figure-html/unnamed-chunk-23-2.png" style="display: block; margin: auto;" />
 
 Finally, we can also calculate average mile pace for the scoring runners for every meet for every year in this time span. This again would place all meets on the same scale and would be a better metric to compare performance at every meet for each year.
 
 
 ```r
+# Average Mile Pace across years plot
 py$avgTimeSummaryALL %>%
   ggplot(aes(x = MEET, y = Avgmile, color = factor(DATE), group = DATE)) +
   geom_line() +
@@ -487,12 +498,13 @@ py$avgTimeSummaryALL %>%
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
 ```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" />
 
-From the plots above, we can see how each team did compared to others for the same meets. As was mentioned before, the 2018 team in general was the "best" in most of the metrics above, though in some other years, the team had a fast average time for a meet or a smaller gap between runners. It is important to take into consideration both gap and overall average mile for the team because a gap between runners can be small, but if they all ran relatively slow, then the point totals would be higher. Similarly, if the average time for a meet was very fast, but the gap was large, then the point total would also be large. As such, we can only deduce from the beginning of this analysis that the team with the smallest gap between runners was the 2018 squad. However, taking into consideration the plots below, we see that the 2019 team had both the fastest average mile and fastest overall average time. Therefore, the 2019 in reality may have been slightly better than the 2018 team, though the 2018 team did have the bets finish in Mac Pack team history, which may have been what gave them the margin in having the best gap. Of course, every team ran in different meets throughout the year and some ran more than others, so some of these comparisons may not be fair. However, this analysis still is able to visualize the team's trajectory throughout the year.
+From the plots above, we can see how each team did compared to others for the same meets. As was mentioned before, the 2018 team in general was the "best" in most of the metrics above, though in some other years, the team had a fast average time for a meet or a smaller gap between runners. It is important to take into consideration both gap and overall average mile for the team because a gap between runners can be small, but if they all ran relatively slow, then the point totals would be higher. Similarly, if the average time for a meet was very fast, but the gap was large, then the point total would also be large. As such, we can only deduce from the beginning of this analysis that the team with the smallest gap between runners was the 2018 squad. However, taking into consideration the plots below, we see that the 2019 team had both the fastest average mile and fastest overall average time. Therefore, the 2019 in reality may have been slightly better than the 2018 team, though the 2018 team did have the best finish in Mac Pack team history, which may have been what gave them the margin in having the best gap. Of course, every team ran in different meets throughout the year and some ran more than others, so some of these comparisons may not be fair. However, this analysis still is able to visualize the team's trajectory throughout the year.
 
 
 ```python
+# Bar plot for average mile pace across years
 avgMileALL = pd.DataFrame(avgTimeSummaryALL.groupby("DATE")
   .mean()["Avgmile"]).reset_index()
 
@@ -515,10 +527,11 @@ plot.set_xlabel("Year")
 plot.set_ylabel("Average Mile")
 ```
 
-<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-24-1.png" width="1440" />
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-25-1.png" width="1440" style="display: block; margin: auto;" />
 
 
 ```python
+# Bar plot for average race time across years
 avgTimeALL = pd.DataFrame(avgTimeSummaryALL.groupby("DATE")
   .mean()["Time_avg"]).reset_index()
 
@@ -541,7 +554,7 @@ plot.set_xlabel("Year")
 plot.set_ylabel("Average Time")
 ```
 
-<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-25-1.png" width="1440" />
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-26-1.png" width="1440" style="display: block; margin: auto;" />
 
 # Analyzing the Class of 2020
 
@@ -549,16 +562,17 @@ A final aspect of this web scraping project I was interested in investigating wa
 
 
 ```python
+# List of Senior runners
 class_2020 = ["Reyes Herrera", "Lepak", "Jarka-Sellers", "Milner", "Bildsten", "O'Donnell-Hoff", "Hernandez"]
 ```
 
-Then using the list above, I filtered the `MeetALL` data from above based on the list above using `.isin()` and saved this new data frame to the `seniors` object.
+Then using the list above, I filtered the `MeetALL` data from above based on this list using `.isin()` and saved this new data frame to an object called `seniors`.
 
 
 ```python
+# Filtering senior runners
 MeetALL = r.MeetALL
-
-seniors = MeetALL[MeetALL.LASTNAME.isin(class_2020)]
+seniors = pd.DataFrame(MeetALL[MeetALL.LASTNAME.isin(class_2020)])
 seniors
 ```
 
@@ -579,10 +593,11 @@ seniors
 ## [148 rows x 43 columns]
 ```
 
-Now only having information on the Class of 2020, I plotted each of the seven members performances using their final time for every meet between the span of 2016-2019.
+Now only having information on the Class of 2020, I plotted each of the seven members' performances using their final time for every meet between the span of 2016-2019.
 
 
 ```r
+# Class of 2020 Race trajectory plot
 py$seniors %>%
   ggplot(aes(x = MEET, y = TIME, color = LASTNAME, group = LASTNAME)) +
   geom_line() +
@@ -597,66 +612,506 @@ py$seniors %>%
                               "St. Olaf Invitational", "Oshkosh", "Griak", "MIAC", "Central Region"))
 ```
 
-```
-## Warning: Removed 2 rows containing missing values (geom_point).
-```
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" />
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+From there, I wanted to see how the average time for a given year changed for each member of the Class of 2020. I grouped by the team member and the date and calculated the average race time and average mile pace for each team member for every year.
 
 
 ```python
-seniorsAvg = seniors.groupby(["LASTNAME", "DATE"]).mean()["TIME"]
-seniorsAvg = seniorsAvg.reset_index()
+# Average mile pace and race time for seniors for all years
+seniorsAvg = seniors.groupby(["LASTNAME", "DATE"]).agg(
+  Time_avg = ("TIME", "mean"),
+  Avgmile = ("Avg. Mile", "mean"))
+seniorsAvg = pd.DataFrame(seniorsAvg.reset_index())
 seniorsAvg
 ```
 
 ```
-##           LASTNAME    DATE       TIME
-## 0         Bildsten  2016.0  27.226429
-## 1         Bildsten  2017.0  26.755833
-## 2         Bildsten  2018.0  30.138333
-## 3         Bildsten  2019.0  27.273889
-## 4        Hernandez  2016.0  28.897000
-## 5        Hernandez  2017.0  32.444583
-## 6        Hernandez  2018.0  32.475417
-## 7        Hernandez  2019.0  27.776944
-## 8    Jarka-Sellers  2016.0  26.903889
-## 9    Jarka-Sellers  2017.0  25.649762
-## 10   Jarka-Sellers  2018.0  27.862500
-## 11   Jarka-Sellers  2019.0  26.906944
-## 12           Lepak  2016.0  26.353333
-## 13           Lepak  2017.0  26.211333
-## 14           Lepak  2018.0  27.708667
-## 15           Lepak  2019.0  25.011389
-## 16          Milner  2017.0  27.594286
-## 17          Milner  2018.0  29.928889
-## 18          Milner  2019.0  26.373667
-## 19  O'Donnell-Hoff  2016.0  27.960476
-## 20  O'Donnell-Hoff  2017.0  27.018056
-## 21  O'Donnell-Hoff  2018.0  28.701000
-## 22  O'Donnell-Hoff  2019.0  26.110556
-## 23   Reyes Herrera  2017.0  26.878333
-## 24   Reyes Herrera  2018.0  28.997500
-## 25   Reyes Herrera  2019.0  25.920000
+##           LASTNAME    DATE   Time_avg   Avgmile
+## 0         Bildsten  2016.0  27.226429  5.951667
+## 1         Bildsten  2017.0  26.755833  5.955278
+## 2         Bildsten  2018.0  30.138333  6.062500
+## 3         Bildsten  2019.0  27.273889  5.875000
+## 4        Hernandez  2016.0  28.897000  6.528333
+## 5        Hernandez  2017.0  32.444583  6.880000
+## 6        Hernandez  2018.0  32.475417  6.532500
+## 7        Hernandez  2019.0  27.776944  5.987778
+## 8    Jarka-Sellers  2016.0  26.903889  5.958611
+## 9    Jarka-Sellers  2017.0  25.649762  5.622857
+## 10   Jarka-Sellers  2018.0  27.862500  5.905000
+## 11   Jarka-Sellers  2019.0  26.906944  5.804167
+## 12           Lepak  2016.0  26.353333  5.695000
+## 13           Lepak  2017.0  26.211333  5.486000
+## 14           Lepak  2018.0  27.708667  5.573667
+## 15           Lepak  2019.0  25.011389  5.384444
+## 16          Milner  2017.0  27.594286  6.048333
+## 17          Milner  2018.0  29.928889  6.020556
+## 18          Milner  2019.0  26.373667  5.766667
+## 19  O'Donnell-Hoff  2016.0  27.960476  6.117857
+## 20  O'Donnell-Hoff  2017.0  27.018056  6.019444
+## 21  O'Donnell-Hoff  2018.0  28.701000  6.004000
+## 22  O'Donnell-Hoff  2019.0  26.110556  5.626667
+## 23   Reyes Herrera  2017.0  26.878333  5.818542
+## 24   Reyes Herrera  2018.0  28.997500  5.832917
+## 25   Reyes Herrera  2019.0  25.920000  5.584722
+```
+
+When visualizing this, we can see for the most part that everyone had a falling trend, which means that in general, all members became faster over the course of the four years.
+
+
+```r
+# Average Race Time per year plot
+py$seniorsAvg %>%
+  ggplot(aes(x = factor(DATE), y = Time_avg, color = LASTNAME, group = LASTNAME)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(x = "Average Race Time", y = "Year", color = "Runner", 
+       title = "Average Race Time For 2016-2019 Seasons", subtitle = "Class of 2020")
+
+# Average Mile Time per Year plot
+py$seniorsAvg %>%
+  ggplot(aes(x = factor(DATE), y = Avgmile, color = LASTNAME, group = LASTNAME)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(x = "Average Mile", y = "Year", color = "Runner", 
+       title = "Average Mile Pace For 2016-2019 Seasons", subtitle = "Class of 2020")
+```
+
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /><img src="MACXC_dataViz_files/figure-html/unnamed-chunk-31-2.png" style="display: block; margin: auto;" />
+
+In addition, we can also determine where and when each member of the Class of 2020 had their fastest and and slowest race. For this analysis, however, it is important to filter out the races that were not an 8k distance, since those races would be the fastest for everyone. More importantly, the culmination of a season is getting a personal best in the 8k. An approach to do this is how we handled filtering out the Class of 2020 using the `.isn()` function and passing through a list. However, another method is creating a new variable `Type` that designates if a race was an 8k, or another distance, as seen below using `numpy` and its `select` function.
+
+
+```python
+# Filtering 8K races
+conditions = [
+    (seniors["MEET"] == "Summit Cup") | (seniors["MEET"] == "Twin Cities Invitational"),
+    (seniors["MEET"] == "Augsburg Open")
+    ]
+choices = ['4 Mile', '5K']
+
+seniors['Type'] = np.select(conditions, choices, default='8K')
+
+seniors
+```
+
+```
+##         PL  TEAMPLACE        LASTNAME  ...   3K 5.8K    Type
+## 4     24.0        5.0           Lepak  ...  NaN  NaN      8K
+## 8     49.0        9.0        Bildsten  ...  NaN  NaN      8K
+## 12    57.0       13.0  O'Donnell-Hoff  ...  NaN  NaN      8K
+## 15    75.0       16.0       Hernandez  ...  NaN  NaN      8K
+## 24    20.0        6.0           Lepak  ...  NaN  NaN  4 Mile
+## ..     ...        ...             ...  ...  ...  ...     ...
+## 440   90.0        5.0  O'Donnell-Hoff  ...  NaN  NaN      8K
+## 442  123.0        7.0   Jarka-Sellers  ...  NaN  NaN      8K
+## 443  127.0        8.0          Milner  ...  NaN  NaN      8K
+## 446  156.0       11.0        Bildsten  ...  NaN  NaN      8K
+## 447  166.0       12.0       Hernandez  ...  NaN  NaN      8K
+## 
+## [148 rows x 44 columns]
+```
+
+From there, we can filter using the new `Type` column and only selecting 8K races. Afterwards, we can group by runner and find the `max` and `min` for final race time.
+
+
+```python
+# Fastest and slowest 8K race for each runner
+seniors_8K = seniors[seniors["Type"] == "8K"]
+
+seniors_best = seniors_8K.groupby("LASTNAME").agg(
+  Slowest_Time = ("TIME", "max"),
+  Fastest_Time = ("TIME", "min")).reset_index()
+
+seniors_best
+```
+
+```
+##          LASTNAME  Slowest_Time  Fastest_Time
+## 0        Bildsten     30.808333     28.456667
+## 1       Hernandez     35.496667     29.171667
+## 2   Jarka-Sellers     30.810000     27.290000
+## 3           Lepak     29.605000     26.266667
+## 4          Milner     30.656667     28.231667
+## 5  O'Donnell-Hoff     31.660000     27.438333
+## 6   Reyes Herrera     30.831667     27.253333
+```
+
+A way to visualize every senior's fast and slowest way is to change the data frame from above to be a longer data frame so that we have a column that designates if it was a runner's fastest or slowest time and a column that is the time in minutes. The code below uses the `stack()` function from `pandas` to create new variables called `Type` and `Race Time` which allows us to create a double bar graph for all runners showing their fastest and slowest times.
+
+
+```python
+# Pivot Longer
+seniors_best.set_index("LASTNAME").stack().reset_index().rename(columns = {0:"Race Time", "level_1":"Type"})
+
+# Bar plot for fastest and slowest 8K times
+```
+
+```
+##           LASTNAME          Type  Race Time
+## 0         Bildsten  Slowest_Time  30.808333
+## 1         Bildsten  Fastest_Time  28.456667
+## 2        Hernandez  Slowest_Time  35.496667
+## 3        Hernandez  Fastest_Time  29.171667
+## 4    Jarka-Sellers  Slowest_Time  30.810000
+## 5    Jarka-Sellers  Fastest_Time  27.290000
+## 6            Lepak  Slowest_Time  29.605000
+## 7            Lepak  Fastest_Time  26.266667
+## 8           Milner  Slowest_Time  30.656667
+## 9           Milner  Fastest_Time  28.231667
+## 10  O'Donnell-Hoff  Slowest_Time  31.660000
+## 11  O'Donnell-Hoff  Fastest_Time  27.438333
+## 12   Reyes Herrera  Slowest_Time  30.831667
+## 13   Reyes Herrera  Fastest_Time  27.253333
+```
+
+```python
+plot = sns.barplot(x="LASTNAME", y="Race Time", hue= "Type", data= seniors_best.set_index("LASTNAME").stack().reset_index().rename(columns = {0:"Race Time", "level_1":"Type"}))
+plot.set_title("Fastest and Slowest 8K Times for Class of 2020", fontsize = 15)
+plot.set_xlabel("Runner")
+plot.set_ylabel("Time")
+```
+
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-34-1.png" width="1440" style="display: block; margin: auto;" />
+
+The using R, we are able to see all the details from a senior's fastest and slowest races - namely, when and where those races were. This is accomplished using R's `slice` and `which.min` functions. We can observe, for example, that I had my fastest race at the Blugold Invitational in 2019 and my slowest at the St. Olaf Invitational in 2017.
+
+
+```r
+# Using R to see Meet and Date when finding min and max
+
+# Fastest Times
+py$seniors_8K %>%
+  group_by(LASTNAME) %>%
+  slice(which.min(TIME)) %>%
+  select(LASTNAME, MEET, TIME, DATE)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["LASTNAME"],"name":[1],"type":["chr"],"align":["left"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TIME"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["DATE"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Bildsten","2":"Blugold Invitational","3":"28.45667","4":"2019"},{"1":"Hernandez","2":"Blugold Invitational","3":"29.17167","4":"2019"},{"1":"Jarka-Sellers","2":"MIAC","3":"27.29000","4":"2017"},{"1":"Lepak","2":"Jim Drews Invitational (Lacrosse)","3":"26.26667","4":"2019"},{"1":"Milner","2":"MIAC","3":"28.23167","4":"2019"},{"1":"O'Donnell-Hoff","2":"MIAC","3":"27.43833","4":"2019"},{"1":"Reyes Herrera","2":"Blugold Invitational","3":"27.25333","4":"2019"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
+# Slowest Times
+py$seniors_8K %>%
+  group_by(LASTNAME) %>%
+  slice(which.max(TIME)) %>%
+  select(LASTNAME, MEET, TIME, DATE)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["LASTNAME"],"name":[1],"type":["chr"],"align":["left"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TIME"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["DATE"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Bildsten","2":"Oshkosh","3":"30.80833","4":"2018"},{"1":"Hernandez","2":"Jim Drews Invitational (Lacrosse)","3":"35.49667","4":"2016"},{"1":"Jarka-Sellers","2":"Griak","3":"30.81000","4":"2016"},{"1":"Lepak","2":"Griak","3":"29.60500","4":"2016"},{"1":"Milner","2":"St. Olaf Invitational","3":"30.65667","4":"2017"},{"1":"O'Donnell-Hoff","2":"Griak","3":"31.66000","4":"2016"},{"1":"Reyes Herrera","2":"St. Olaf Invitational","3":"30.83167","4":"2017"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+In addition, now that we have a data frame in which all the non-8K meets are filtered out, we can also use `seaborn` to create a box plot to show the distribution of race times for each runner. We can see that Lepak had the lowest range, while Hernandez had the largest.
+
+
+```python
+#Range of Times for Class 0f 2020 throughout the years
+plot = sns.boxplot(x= "LASTNAME", y= "TIME", data = seniors_8K)
+plot.set_title("Range of 8K Times for Class of 202 Runners", fontsize = 15)
+plot.set_xlabel("Runner")
+plot.set_ylabel("Race Time")
+```
+
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-36-1.png" width="1440" style="display: block; margin: auto;" />
+
+# Reanalyzing 2016-2019 Seasons Using only 8K times
+
+Now that we have a method to only analyze 8K times, we return to comparing all four seasons based only on 8K times. We will repeat the analysis and visualizations above, but this time using only 8K meets.
+
+We are first interested in comparing the range of 8K times for every year, so we take the original `avgTimeALL` pandas data frame from the second section that has information on the top 5 runners from all years and filter out non-8K races using the list and `.isnin()` method we used before the previous section.`MeetALL` data frame that was manipulated in R to convert the times into numeric types, call it back into Python, and filter out the non-8K races using the list and `.isin()` method. It is important to note that the tilde here is needed, which is equivalent to `=!`.
+
+
+```python
+# Filtering 8K races
+non8K = ["Summit Cup", "Twin Cities Invitational", "Augsburg Open"]
+avgTimeALL_8K = r.MeetALL[r.MeetALL.TEAMPLACE <= 5]
+avgTimeALL_8K = avgTimeALL_8K[~avgTimeALL_8K.MEET.isin(non8K)]
+```
+
+Then, we are able to calculate summary statistics and use a `seaborn` box plot to understand the range of 8K times for each year. We can see that the 2016 team had the highest range in times as the standard deviation is about 0.85, while 2018 had the lowest range in times. Nevertheless, the mean and median times for 2018 are higher than that of the 2019 times, which means the the 2019 team had faster times at meets even though the 2018 team had a smaller range.
+
+
+```python
+#Range of 8K times for each Year
+avgTimeALL_8K.groupby("DATE").agg(
+mean = ("TIME", "mean"),
+median = ("TIME", "median"),
+sd = ("TIME", "std")
+)
+```
+
+```
+##              mean     median        sd
+## DATE                                  
+## 2016.0  27.882222  27.746667  0.856068
+## 2017.0  27.454056  27.410833  0.616733
+## 2018.0  27.598667  27.563333  0.516090
+## 2019.0  27.208333  27.210000  0.644391
+```
+
+```python
+plot = sns.boxplot(x= "DATE", y= "TIME", data = seniors_8K)
+plot.set_title("Range of 8K Times for 2016-2019 Seasons", fontsize = 15)
+plot.set_xlabel("Year")
+plot.set_ylabel("Race Time")
+```
+
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-38-1.png" width="1440" style="display: block; margin: auto;" />
+
+Now, using the technique from the previous section we take the `avgTimeSummaryALL` data frame that summarizes the average race time, mile pace, and gap between runners for all meets across the four years created in the second section above and add a new variable called `Type` that designates the distance of the race. We can keep in mind that this data frame had already filtered to only reflect the averages for those runners in the top 5 on the team.
+
+
+```python
+conditions = [
+    (avgTimeSummaryALL["MEET"] == "Summit Cup") | (avgTimeSummaryALL["MEET"] == "Twin Cities Invitational"),
+    (avgTimeSummaryALL["MEET"] == "Augsburg Open")
+    ]
+choices = ['4 Mile', '5K']
+
+avgTimeSummaryALL['Type'] = np.select(conditions, choices, default='8K')
+avgTimeSummaryALL
+```
+
+```
+##                                  MEET    DATE  ...       gap    Type
+## 0                       Augsburg Open  2016.0  ...  0.366667      5K
+## 1                       Augsburg Open  2017.0  ...  1.460000      5K
+## 2                Blugold Invitational  2016.0  ...  1.266667      8K
+## 3                Blugold Invitational  2019.0  ...  1.488333      8K
+## 4                      Central Region  2016.0  ...  1.443333      8K
+## 5                      Central Region  2017.0  ...  1.261667      8K
+## 6                      Central Region  2018.0  ...  0.960000      8K
+## 7                       Falcon Invite  2017.0  ...  1.731667      8K
+## 8                               Griak  2016.0  ...  1.838333      8K
+## 9                               Griak  2018.0  ...  0.505000      8K
+## 10  Jim Drews Invitational (Lacrosse)  2016.0  ...  1.911667      8K
+## 11  Jim Drews Invitational (Lacrosse)  2017.0  ...  1.711667      8K
+## 12  Jim Drews Invitational (Lacrosse)  2019.0  ...  1.478333      8K
+## 13                               MIAC  2016.0  ...  1.280000      8K
+## 14                               MIAC  2017.0  ...  0.901667      8K
+## 15                               MIAC  2018.0  ...  0.980000      8K
+## 16                               MIAC  2019.0  ...  0.866667      8K
+## 17                            Oshkosh  2018.0  ...  0.870000      8K
+## 18                        River Falls  2016.0  ...  1.036667      8K
+## 19     Running of the Cows (Carleton)  2017.0  ...  1.163333      8K
+## 20     Running of the Cows (Carleton)  2019.0  ...  1.705000      8K
+## 21              St. Olaf Invitational  2017.0  ...  0.986667      8K
+## 22              St. Olaf Invitational  2018.0  ...  0.858333      8K
+## 23                         Summit Cup  2016.0  ...  0.850000  4 Mile
+## 24                         Summit Cup  2017.0  ...  1.400000  4 Mile
+## 25                         Summit Cup  2019.0  ...  0.883333  4 Mile
+## 26           Twin Cities Invitational  2018.0  ...  0.996667  4 Mile
+## 27           Twin Cities Invitational  2019.0  ...  0.743333  4 Mile
+## 
+## [28 rows x 8 columns]
+```
+
+Then using the new column, we choose only the races which are 8K distance to analyze.
+
+
+```python
+#Filtering 8K races from summary of average mile pace, race times, gap for all years
+avgTimeSummaryALL_8K = avgTimeSummaryALL[avgTimeSummaryALL["Type"] == "8K"]
+```
+
+Finally, we compute the average race time, mile pace, and gap between runners for every year and visualize the results.
+
+
+```python
+# Average Race Time for each meet for every year
+avgTimeALL_8K = pd.DataFrame(avgTimeSummaryALL_8K.groupby("DATE")
+  .mean()["Time_avg"]).reset_index()
+
+avgTimeALL_8K
+```
+
+```
+##      DATE   Time_avg
+## 0  2016.0  27.882222
+## 1  2017.0  27.454056
+## 2  2018.0  27.598667
+## 3  2019.0  27.208333
+```
+
+
+```python
+# Average Mile Pace for each meet for every year
+avgMileALL_8K = pd.DataFrame(avgTimeSummaryALL_8K.groupby("DATE")
+  .mean()["Avgmile"]).reset_index()
+
+avgMileALL_8K
+```
+
+```
+##      DATE   Avgmile
+## 0  2016.0  5.608722
+## 1  2017.0  5.522556
+## 2  2018.0  5.551533
+## 3  2019.0  5.473000
+```
+
+
+```python
+#Average Gap between runners for each meet for every year
+gapsALL_8K = pd.DataFrame(avgTimeSummaryALL_8K.groupby("DATE")
+  .mean()["gap"]).reset_index()
+gapsALL_8K
+```
+
+```
+##      DATE       gap
+## 0  2016.0  1.462778
+## 1  2017.0  1.292778
+## 2  2018.0  0.834667
+## 3  2019.0  1.384583
 ```
 
 
 ```r
-py$seniorsAvg %>%
-  ggplot(aes(x = factor(DATE), y = TIME, color = LASTNAME, group = LASTNAME)) +
-  geom_line() +
-  geom_point()
+# Visualizing Average Time, Average Mile and Gaps for every year (only 8K)
+p1 <- py$avgTimeALL_8K %>%
+  ggplot(aes(x = factor(DATE), y = Time_avg, fill = factor(DATE))) +
+  geom_col() +
+  theme_minimal() +
+  labs(x = "Year", y = "Race Time", title = "Average Race Time") +
+  scale_x_discrete(limits = c("2019", "2017", "2018", "2016")) +
+  theme(legend.position = "none")
+
+p2 <- py$avgMileALL_8K %>%
+  ggplot(aes(x = factor(DATE), y = Avgmile, fill = factor(DATE))) +
+  geom_col() +
+  theme_minimal() +
+  labs(x = "Year", y = "Mile Pace", title = "Average Mile Pace") +
+  scale_x_discrete(limits = c("2019", "2017", "2018", "2016")) +
+  theme(legend.position = "none")
+
+p3 <- py$gapsALL_8K %>%
+  ggplot(aes(x = factor(DATE), y = gap, fill = factor(DATE))) +
+  geom_col() +
+  theme_minimal() +
+  labs(x = "Year", y = "Gap (minutes)", title = "Average Gap") +
+  scale_x_discrete(limits = c("2018", "2017", "2019", "2016")) +
+  theme(legend.position = "none")
+
+gridExtra::grid.arrange(p1, p2, p3, ncol = 3, nrow = 1)
 ```
 
-![](MACXC_dataViz_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+<img src="MACXC_dataViz_files/figure-html/unnamed-chunk-44-1.png" style="display: block; margin: auto;" />
+
+With all other races but 8K distances filtered out, we can see that most of the results remain the same as the analysis from above. The results for the average 8K race time at meets for every year are identical - the 2019 team had the fastest average race time out of the other 3 teams, which means that runners generally were faster on this team than runners on the other teams in previous years. The margin for this is very small, as the 2017 and 2018 teams are not much slower. For the average mile pace at 8K races, the 2019 team again produces the fastest runners. Compared to the results above, the 2017 team has a slightly faster average mile pace than the 2018 team, while the opposite was true when all races were being considered. The average gap for 8K races is starkly different than the results when all the races were being considered. Here, we see that the 2018 team still had the best average minute gap between the first and fifth runner. However, the 2017 team had the second best gap at about 1 minute and 15 seconds; this team had the worst gap when all races were being considered. Consequently, the 2019 team had the third best gap at about 1 minute and 20 seconds and the 2016 team had the worst gap at 1 minute and 30 seconds. 
+
+In conclusion, when considering only 8K races, the 2018 team had the best gap between the first and the fifth runner, meaning that they were the best at minimizing their point accumulation. However, because they did not have the fastest average 8K race times or the fastest average mile paces, this means that their point total may have been more than what is conveyed by their gap. Since they are running slower on average than other teams, that means they are allowing more runners in front of them, which means more points and a worse team finish. Nevertheless, even though the 2019 team had faster times on average, because the gap was big, there were more runners from other teams in between the Mac Pack, meaning more points as well. Therefore, both situations level out and it seems that they performed similarly. Taking all this into account, though, shows how well the team stuck together and how the team changed over the years. 
+
+Finally, now that we have results that only reflect 8K races, we can also find where each team had their fastest and slowest races.
 
 
 ```python
-# Filter out non 8k
-
-non8k = ["Summit Cup", "Augsburg Open", "Twin Cities Invitational"]
+# Fastest and slowest 8K race for each year
+ALL8K_fast_slow = avgTimeSummaryALL_8K.groupby("DATE").agg(
+  Slowest_Time = ("Time_avg", "max"),
+  Fastest_Time = ("Time_avg", "min"),
+  Slowest_pace = ("Avgmile", "max"),
+  Fastest_pace = ("Avgmile", "min"),
+  best_gap = ("gap", "min"),
+  worst_gap = ("gap", "max")).reset_index()
+  
+ALL8K_fast_slow
 ```
 
-Add column based on conditions in pandas
+```
+##      DATE  Slowest_Time  Fastest_Time  ...  Fastest_pace  best_gap  worst_gap
+## 0  2016.0     29.246000     27.252667  ...      5.482000  1.036667   1.911667
+## 1  2017.0     28.015333     27.056000  ...      5.443000  0.901667   1.731667
+## 2  2018.0     28.189667     26.946333  ...      5.420333  0.505000   0.980000
+## 3  2019.0     27.801000     26.827667  ...      5.396667  0.866667   1.705000
+## 
+## [4 rows x 7 columns]
+```
 
-https://stackoverflow.com/questions/19913659/pandas-conditional-creation-of-a-series-dataframe-column
+
+```r
+# Using R to see Meet and Date when finding min and max
+
+# Fastest Time a runner got
+py$avgTimeSummaryALL_8K %>%
+  group_by(DATE) %>%
+  slice(which.min(Time_min)) %>%
+  select(MEET, Time_min)
+```
+
+```
+## Adding missing grouping variables: `DATE`
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["DATE"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Time_min"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2016","2":"Blugold Invitational","3":"26.44000"},{"1":"2017","2":"Central Region","3":"26.24833"},{"1":"2018","2":"Central Region","3":"26.40667"},{"1":"2019","2":"Blugold Invitational","3":"26.00000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
+# Slowest Time a runner got
+py$avgTimeSummaryALL_8K %>%
+  group_by(DATE) %>%
+  slice(which.max(Time_max)) %>%
+  select(MEET, Time_max)
+```
+
+```
+## Adding missing grouping variables: `DATE`
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["DATE"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Time_max"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2016","2":"Griak","3":"29.87000"},{"1":"2017","2":"Falcon Invite","3":"29.03167"},{"1":"2018","2":"Oshkosh","3":"28.43333"},{"1":"2019","2":"Running of the Cows (Carleton)","3":"28.61000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
+# Fastest Time as team
+py$avgTimeSummaryALL_8K %>%
+  group_by(DATE) %>%
+  slice(which.min(Time_avg)) %>%
+  select(MEET, Time_avg)
+```
+
+```
+## Adding missing grouping variables: `DATE`
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["DATE"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Time_avg"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2016","2":"Blugold Invitational","3":"27.25267"},{"1":"2017","2":"MIAC","3":"27.05600"},{"1":"2018","2":"Central Region","3":"26.94633"},{"1":"2019","2":"Blugold Invitational","3":"26.82767"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
+# Slowest Time as a team
+py$avgTimeSummaryALL_8K %>%
+  group_by(DATE) %>%
+  slice(which.max(Time_avg)) %>%
+  select(MEET, Time_avg)
+```
+
+```
+## Adding missing grouping variables: `DATE`
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["DATE"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["MEET"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Time_avg"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2016","2":"Griak","3":"29.24600"},{"1":"2017","2":"Falcon Invite","3":"28.01533"},{"1":"2018","2":"Oshkosh","3":"28.18967"},{"1":"2019","2":"Running of the Cows (Carleton)","3":"27.80100"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+
+# Conclusion
+
+This analysis first used Python and the `Beautiful Soup` module to scrape data on meet results for the Macalester Men's Cross Country team for the seasons between 2016 and 2019 years. Then, using a combination of R packages such as `ggplot` and `lubridate` and Python modules such as `seaborn` and `pandas`, we were able to analyze runner performance and compare team performance in each of the four seasons in this sample.
