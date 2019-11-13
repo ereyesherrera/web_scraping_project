@@ -1,4 +1,4 @@
-# Analyzing Macalester Men's Cross Country Meet Results with Beautiful Soup
+# Analyzing Macalester Men's Cross Country Meet Results with Python's Beautiful Soup and R
 
 ## Sources
 

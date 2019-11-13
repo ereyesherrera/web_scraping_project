@@ -133,7 +133,6 @@ def filterMac(df):
     TeamPlace = list(range(1, shape[0] + 1))
     df.insert(1, "TEAMPLACE", TeamPlace)
     return df
-# =======================================================
 
 # =======================================================
 # Data on 2019 Meets (including the one above)

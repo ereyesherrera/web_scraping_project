@@ -70,7 +70,7 @@ g = sns.FacetGrid(MeetInfo, col="LASTNAME", hue = "LASTNAME", col_wrap=5)
 ```
 
 ```
-## <seaborn.axisgrid.FacetGrid object at 0x1285669d0>
+## <seaborn.axisgrid.FacetGrid object at 0x127889b10>
 ```
 
 ```python
@@ -109,25 +109,25 @@ runnerMeets
 
 ```
 ##                 Count
-## Milner              6
-## Peske               6
+## Jarka-Sellers       6
 ## Hernandez           6
+## Peske               6
 ## Baumeister          6
-## O'Donnell-Hoff      6
-## Mayse               6
 ## Reyes Herrera       6
 ## Lepak               6
-## Jarka-Sellers       6
-## Johnson             6
 ## Bildsten            6
+## O'Donnell-Hoff      6
+## Johnson             6
+## Milner              6
+## Mayse               6
 ## Kerr                5
-## Rachlin             4
 ## Hayes               4
-## Lewis-Norelle       3
-## Baldus              3
+## Rachlin             4
 ## Levy                3
-## Morefield           3
 ## Hunsanger           3
+## Baldus              3
+## Lewis-Norelle       3
+## Morefield           3
 ```
 
 I was interested in analyzing how many points every runner that ran in every meet (including the Central Region meet) this year accumulated. First, I retrieved a list of the names of the runners that ran in all 7 meets by filtering and saved it into an object called `scorers`. The `.index` was used to extract the names, as the names were being used as the index of the rows in the above data frame.
@@ -140,7 +140,7 @@ scorers
 ```
 
 ```
-## ['Milner', 'Peske', 'Hernandez', 'Baumeister', "O'Donnell-Hoff", 'Mayse', 'Reyes Herrera', 'Lepak', 'Jarka-Sellers', 'Johnson', 'Bildsten']
+## ['Jarka-Sellers', 'Hernandez', 'Peske', 'Baumeister', 'Reyes Herrera', 'Lepak', 'Bildsten', "O'Donnell-Hoff", 'Johnson', 'Milner', 'Mayse']
 ```
 
 Then, I took the original `MeetInfo` data set that has all the information of 2019 meets and filtered to only reflect runners that were in the top 5 for the team in each meet. This reflects those runners that contributed to the overall team score for each meet since only the top 5 runners on each team score. This takes advantage of the `.isin()` function of pandas, which looks to filter the column of `TEAMPLACE` satisfy the condition that it is between 1 and 5.
