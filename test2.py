@@ -157,7 +157,7 @@ shape = TwinTwlightMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 TwinTwlightMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-# print(TwinTwlightMeet_Mac)
+print(TwinTwlightMeet_Mac)
 
 # =======================================================
 BlugoldMeet = scrapeData("https://www.tfrrs.org/results/xc/16404/Blugold_Invitational", 31, 478, 1)
@@ -179,7 +179,7 @@ shape = BlugoldMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 BlugoldMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-# print(BlugoldMeet_Mac)
+print(BlugoldMeet_Mac)
 
 # =======================================================
 CarletonMeet = scrapeData("https://www.tfrrs.org/results/xc/16179/Running_of_the_Cows", 18, 244, 1)
@@ -201,7 +201,7 @@ shape = CarletonMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 CarletonMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-# print(CarletonMeet_Mac)
+print(CarletonMeet_Mac)
 # =======================================================
 SummitCupMeet = scrapeData("https://www.tfrrs.org/results/xc/16025/Summit_Cup", 4, 40, 1)
 # Start: 4, End: 40, 1
@@ -222,7 +222,7 @@ shape = SummitCupMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 SummitCupMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
-# print(SummitCupMeet_Mac)
+print(SummitCupMeet_Mac)
 
 # =======================================================
 
@@ -245,6 +245,8 @@ shape = MIACMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 MIACMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
+print(MIACMeet_Mac)
+
 # =======================================================
 
 CentralRegionMeet = scrapeData("https://www.tfrrs.org/results/xc/16678/MIAC_Conference_Championships", 14, 234, 1)
@@ -266,6 +268,7 @@ shape = CentralRegionMeet_Mac.shape
 TeamPlace = list(range(1,shape[0]+1))
 CentralRegionMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
+print(CentralRegionMeet_Mac)
 # =======================================================
 MeetTimes_19 = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac,
                           MIACMeet_Mac, CentralRegionMeet_Mac],
@@ -335,6 +338,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df)
         dfList_meets18.append(dfMac)
+    print(df)
 
 # Saving each data frame in the list in their own objects
 df1_18 = pd.DataFrame(dfList_meets18[0])
@@ -427,6 +431,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+    print(df)
 
 '''
 ################################
@@ -438,7 +443,7 @@ for key in Meets_17.keys():
 # page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
 # Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
 # it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
-# This can be placed in another Python file and ran by itself within the same working directory.
+# This can be placed in another Python file (provided) and ran by itself within the same working directory.
 
 session = HTMLSession()
 resp2 = session.get("http://www.fastfinishtiming.com/2017RoadandCC/17Results/MIACMen.html")
@@ -589,7 +594,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
-
+    print(df)
 
 '''
 ################################
@@ -601,7 +606,7 @@ for key in Meets_16.keys():
 # page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
 # Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
 # it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
-# This can be placed in another Python file and ran by itself within the same working directory.
+# This can be placed in another Python file (provided) and ran by itself within the same working directory.
 
 session = HTMLSession()
 resp3 = session.get("http://wayzatatiming.com/crosscountry/2016/AugsburgAlumni/")
