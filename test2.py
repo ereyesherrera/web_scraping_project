@@ -306,6 +306,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df) # Using function that filters Macalester runners here and throughout
         dfList_meets18.append(dfMac)
+        print(dfMac)
     elif key == "St. Olaf":
         df = scrapeData(Meets_18[key], 183, 305, 3)
         rows = df.shape
@@ -314,6 +315,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df)
         dfList_meets18.append(dfMac)
+        print(dfMac)
     elif key == "Griak":
         df = scrapeData(Meets_18[key], 813, 1164, 9)
         rows = df.shape
@@ -322,6 +324,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df)
         dfList_meets18.append(dfMac)
+        print(dfMac)
     elif key == "MIAC":
         df = scrapeData(Meets_18[key], 13, 213, 1)
         rows = df.shape
@@ -330,6 +333,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df)
         dfList_meets18.append(dfMac)
+        print(dfMac)
     elif key == "Region":
         df = scrapeData(Meets_18[key], 271, 483, 3)
         rows = df.shape
@@ -338,7 +342,7 @@ for key in Meets_18.keys():
         df["DATE"] = 2018
         dfMac = filterMac(df)
         dfList_meets18.append(dfMac)
-    print(df)
+        print(dfMac)
 
 # Saving each data frame in the list in their own objects
 df1_18 = pd.DataFrame(dfList_meets18[0])
@@ -383,6 +387,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df) # Using function that filters Macalester runners here and throughout
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "River Falls":
         df = scrapeData(Meets_17[key], 10, 86, 1)
         rows = df.shape
@@ -391,6 +396,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "St. Olaf":
         df = scrapeData(Meets_17[key], 366, 644, 3)
         rows = df.shape
@@ -399,6 +405,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "Summit Cup":
         df = scrapeData(Meets_17[key], 4, 33, 1)
         rows = df.shape
@@ -407,6 +414,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "Region":
         df = scrapeData(Meets_17[key], 281, 483, 3)
         rows = df.shape
@@ -415,6 +423,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "Carleton":
         df = scrapeData(Meets_17[key], 14, 193, 1)
         rows = df.shape
@@ -423,6 +432,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
+        print(dfMac)
     elif key == "Lacrosse":
         df = scrapeData(Meets_17[key], 23, 380, 1)
         rows = df.shape
@@ -431,7 +441,7 @@ for key in Meets_17.keys():
         df["DATE"] = 2017
         dfMac = filterMac(df)
         dfList_meets17.append(dfMac)
-    print(df)
+        print(dfMac)
 
 '''
 ################################
@@ -498,6 +508,8 @@ MIAC17["FIRSTNAME"] = splitName[0]
 MIAC17["LASTNAME"] = splitName[1]
 MIAC17.drop(columns =["NAME", "X1", "X2", "X3"], inplace = True)
 
+print(MIAC17)
+
 MIAC17.to_csv("data/MIAC17.csv")
 '''
 
@@ -546,6 +558,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df) # Using function to filter Macalester runners
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "Griak":
         df = scrapeData(Meets_16[key], 1538, 1628, 9)
         rows = df.shape
@@ -554,6 +567,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "Blugold":
         df = scrapeData(Meets_16[key], 250, 536, 3)
         rows = df.shape
@@ -562,6 +576,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "Summit Cup":
         df = scrapeData(Meets_16[key], 4, 49, 1)
         rows = df.shape
@@ -570,6 +585,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "Region":
         df = scrapeData(Meets_16[key], 285, 493, 3)
         rows = df.shape
@@ -578,6 +594,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "MIAC":
         df = scrapeData(Meets_16[key], 275, 484, 3)
         rows = df.shape
@@ -586,6 +603,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
+        print(dfMac)
     elif key == "Lacrosse":
         df = scrapeData(Meets_16[key], 22, 391, 1)
         rows = df.shape
@@ -594,7 +612,7 @@ for key in Meets_16.keys():
         df["DATE"] = 2016
         dfMac = filterMac(df)
         dfList_meets16.append(dfMac)
-    print(df)
+        print(dfMac)
 
 '''
 ################################
@@ -654,6 +672,8 @@ splitName = Augsburg16["NAME"].str.split(" ", n = 1, expand = True)
 Augsburg16["FIRSTNAME"] = splitName[0]
 Augsburg16["LASTNAME"] = splitName[1]
 Augsburg16.drop(columns =["NAME"], inplace = True)
+
+print(Augsburg16)
 
 Augsburg16.to_csv("data/Augsburg16.csv")
 '''
