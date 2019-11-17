@@ -59,6 +59,12 @@
 * https://yihui.name/knitr/options/#chunk-options
 * https://blogdown-demo.rbind.io/2018/01/31/gif-animations/
 * https://stackoverflow.com/questions/18884778/poor-resolution-in-knitr-using-rmd
+* https://stackoverflow.com/questions/36783189/changing-the-appearance-of-facet-labels-size?rq=1
+* https://stackoverflow.com/questions/20076195/what-is-the-most-efficient-way-of-counting-occurrences-in-pandas
+* https://stackoverflow.com/questions/38933071/group-by-two-columns-and-count-the-occurrences-of-each-combination-in-pandas
+* http://www.datasciencemadesimple.com/reshape-long-wide-pandas-python-pivot-function/
+* https://stackoverflow.com/questions/40185446/how-to-put-in-bold-the-title-in-a-seaborn-factorplot
+* https://stackoverflow.com/questions/29067541/how-to-change-the-font-color
 
 **Websites where data was retrieved:**
 
@@ -90,5 +96,4 @@
 * https://www.tfrrs.org/results/xc/16179/Running_of_the_Cows
 * https://www.tfrrs.org/results/xc/16025/Summit_Cup
 * https://www.tfrrs.org/results/xc/16678/MIAC_Conference_Championships
-
-
+* https://www.tfrrs.org/results/xc/16562/NCAA_Division_III_Central_Region_Cross_Country_Championships

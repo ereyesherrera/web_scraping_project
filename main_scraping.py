@@ -249,8 +249,9 @@ print(MIACMeet_Mac)
 
 # =======================================================
 
-CentralRegionMeet = scrapeData("https://www.tfrrs.org/results/xc/16678/MIAC_Conference_Championships", 14, 234, 1)
-# Start: 14, End: 234, 1
+CentralRegionMeet = \
+    scrapeData("https://www.tfrrs.org/results/xc/16562/NCAA_Division_III_Central_Region_Cross_Country_Championships", 31, 232, 1)
+# Start: 31, End: 232, 1
 
 # Adding column to designate meet name
 rows = CentralRegionMeet.shape
