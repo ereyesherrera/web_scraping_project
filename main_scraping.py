@@ -271,6 +271,8 @@ CentralRegionMeet_Mac.insert(1, "TEAMPLACE", TeamPlace)
 
 print(CentralRegionMeet_Mac)
 # =======================================================
+
+# Putting all the data frames that represent meets of the year into one larger one, export to csv
 MeetTimes_19 = pd.concat([TwinTwlightMeet_Mac, SummitCupMeet_Mac, CarletonMeet_Mac, BlugoldMeet_Mac, LacrosseMeet_Mac,
                           MIACMeet_Mac, CentralRegionMeet_Mac],
                       sort=False)
