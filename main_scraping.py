@@ -12,7 +12,7 @@ resp.html.render()
 
 soup = BeautifulSoup(resp.html.html, "lxml")
 
-# Finding all rows
+# Finding all rows in table of results
 table_rows = []
 rows = soup.findAll('tr')
 for row in rows:
