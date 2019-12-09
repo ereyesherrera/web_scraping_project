@@ -1,6 +1,7 @@
 import pandas as pd
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
+from scraping_missing_meets import *
 
 # =======================================================
 # First pass to create web scraping script
@@ -133,6 +134,10 @@ def filterMac(df):
     TeamPlace = list(range(1, shape[0] + 1))
     df.insert(1, "TEAMPLACE", TeamPlace)
     return df
+
+# This is a function call imported from a separate script to collect data on meets that are note in the main
+# TFRRS website that was used to get info from for this data. More explanation is given below where it applies.
+missing_meets()
 
 # =======================================================
 # Data on 2019 Meets (including the one above)
@@ -453,10 +458,9 @@ for key in Meets_17.keys():
 
 # As mentioned above, there was data on one meet that could only be found on another website different than the one
 # in which the function was created to scrape from. As such, the code below shows how to web scrape this particular
-# page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
-# Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
-# it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
-# This can be placed in another Python file (provided) and ran by itself within the same working directory.
+# page. This code was placed in a new script (scraping_missing_meets.py) within a function called missing_meets, which
+# was imported and called above already. The code is included here merely to show that this is a meet that pertains to
+# this year.
 
 session = HTMLSession()
 resp2 = session.get("http://www.fastfinishtiming.com/2017RoadandCC/17Results/MIACMen.html")
@@ -624,10 +628,9 @@ for key in Meets_16.keys():
 
 # As mentioned above, there was data on one meet that could only be found on another website different than the one
 # in which the function was created to scrape from. As such, the code below shows how to web scrape this particular
-# page. It is saved to a csv file so that these commands only need to be executed once, then they are commented out.
-# Note that this can only be run by itself, everything else has to be commented out for it to work. This is because
-# it is pulling from a different website than the rest, so the connection gets lost if everything else is included.
-# This can be placed in another Python file (provided) and ran by itself within the same working directory.
+# page. This code was placed in a new script (scraping_missing_meets.py) within a function called missing_meets, which
+# was imported and called above already. The code is included here merely to show that this is a meet that pertains to
+# this year.
 
 session = HTMLSession()
 resp3 = session.get("http://wayzatatiming.com/crosscountry/2016/AugsburgAlumni/")
