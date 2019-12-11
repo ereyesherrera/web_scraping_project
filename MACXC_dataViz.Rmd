@@ -35,13 +35,13 @@ knitr::opts_chunk$set(fig.align = "center", fig.show = "hold", fig.height = 7, f
 ```
 
 
-# Introduction
+# **Introduction**
 
 The "Mac Pack" is what the Macalester Men's Cross Country Team is fondly known as, given to our current coach Matt Haugen. He deems the "Mac Pack Era" as the time in which he has been head coach, which has been since the 2002. The team nickname is a play-on-words to indicate that we run in packs, which is important in cross country since the goal is to try to minimize the number of points the team collects in a meet. This analysis uses data on the Macalester's men's cross country team results between 2016 and 2019 that was compiled from the [TFRRS website](https://www.tfrrs.org/index.html) using `Beautiful Soup` in Python. Inspiration from this project stemmed from the various race reports that our coach would send the team after every meet, while the methods to actually implement this were inspired by Viridiana Romero Martinez and her [Medium website post](https://medium.com/@viritaromero/web-scraping-5k-race-results-with-python-and-beautifulsoup-d08eba5624eb), where she provides very helpful code that I was able to follow closely and cater to my own analysis. The goal of this project was to analyze team and individual performance across my four year tenure at Macalester, looking at metrics such as mile paces, final times, and scoring. 
 
 The link to the Git Hub repository for this project, which contains this write up, scripts for extracting meet info, the resulting CSV files which contain information on all meets for the four year span, and a Markdown file with sources and references that were used to complete this project is given [here](https://github.com/ereyesherrera/web_scraping_project).
 
-# Project: Phase 4
+# **Project: Phase 4**
 
 ## User’s Manual & Script Contents
 
@@ -75,7 +75,9 @@ There are many “future extensions” I can consider for this project. For exam
 
 The following sections are the analysis I chose to perform on the data I was able to extract using the scripts explained above.
 
-# Analyzing the 2019 Cross Country Season
+# **Visualizations & Summaries**
+
+## Analyzing the 2019 Cross Country Season
 
 This reads in the csv file that was created from the Python script dedicated to web scraping meet results and creating a full data frame containing information on all the meets that the men's cross country team competed in this year. It drops an unused variable left over from that process.
 
@@ -242,7 +244,7 @@ We can also calculate the average gap between the 1st and 5th runner for the ent
 avgTimeSummary["gap"].mean().round(4)
 ```
 
-# Analyzing the 2016-2019 Seasons
+## Analyzing the 2016-2019 Seasons
 
 Now that we have analyzed performances for the 2019 cross country season, we can apply the same analysis to *all* races during my four years here at Macalester.
 
@@ -447,7 +449,7 @@ year_breakdown.pivot(index= "DATE", columns = "YEAR", values = 0)
 ```
 
 
-# Analyzing the Class of 2020
+## Analyzing the Class of 2020
 
 A final aspect of this web scraping project I was interested in investigating was visualizing the trajectory of the Class of 2020 teammates during our four years at Macalester. Using Python, we create a list with the remaining Class of 2020 teammates.
 
@@ -593,7 +595,7 @@ plot.set_xlabel("Runner", fontsize = 15, weight = "bold")
 plot.set_ylabel("Race Time", fontsize = 15, weight = "bold")
 ```
 
-# Reanalyzing 2016-2019 Seasons Using only 8K times
+## Reanalyzing 2016-2019 Seasons Using only 8K times
 
 Now that we have a method to only analyze 8K times, we return to comparing all four seasons based only on 8K times. We will repeat the analysis and visualizations above, but this time using only 8K meets.
 
@@ -725,6 +727,8 @@ ALL8K_fast_slow
 
 The following R code produces summary statistics similar to the Python code above, but again uses the `slice()` and `which.min()` functions to find where the fastest and slowest team times, mile paces, and individual times occurred as well as the best and worst team gaps for every year. These results are then transformed into a "longer" format so that they are able to be combined and viewed together.
 
+We can observe that 2018 produced the best team gap out of these four years, while 2019 had the fastest individual 8k time out of any runners in this four year span.
+
 ```{r, warning=FALSE, message=FALSE}
 # Using R to see Meet and Date when finding min and max
 # Separate data frames for each metric
@@ -782,24 +786,43 @@ d7 <- py$avgTimeSummaryALL_8K %>%
   group_by(DATE) %>%
   slice(which.max(gap)) %>%
   select(MEET, gap) %>%
-  rename(Best_gap = gap) %>%
-  pivot_longer(cols = Best_gap, names_to = "Type", values_to = "Result")
+  rename(Worst_gap = gap) %>%
+  pivot_longer(cols = Worst_gap, names_to = "Type", values_to = "Result")
 
 # Best gap as a team
 d8 <- py$avgTimeSummaryALL_8K %>%
   group_by(DATE) %>%
   slice(which.min(gap)) %>%
   select(MEET, gap) %>%
-  rename(Worst_gap = gap) %>%
-  pivot_longer(cols = Worst_gap, names_to = "Type", values_to = "Result")
+  rename(Best_gap = gap) %>%
+  pivot_longer(cols = Best_gap, names_to = "Type", values_to = "Result")
 
 # Combining dataframes from above into one
 ALL8K_fast_slow <- bind_rows(d1, d2, d3, d4, d5, d6, d7, d8)
 ALL8K_fast_slow
 ```
 
+Similarly, we can also see which was the "best" for all these metrics the board in this four year span. We can see that 2018 produced the best gap, while 2019 produced the fastest individual time, fastest team pace, and the fastest average team time - all in the same meet.
 
-# Conclusion
+```{r}
+# Best Year for each of the "fastest" Metrics
+ALL8K_fast_slow %>%
+  filter(Type %in% c("Fastest_IndivTime", "Fastest_TeamTime", "Fastest_pace", "Best_gap")) %>%
+  group_by(Type) %>%
+  slice(which.min(Result))
+```
+
+Conversely, we can see that 2016 produced the slowest average team time, average team pace, and individual time at the Griak meet, and also the worst average gap between runners at the Jim Drews Invitational. All in all, 2016 can be seen as the "worst" Mac Pack team in this four year span.
+
+```{r}
+# Worst Year for each of the "slowest" Metrics
+ALL8K_fast_slow %>%
+  filter(Type %in% c("Slowest_IndivTime", "Slowest_TeamTime", "Slowest_pace", "Worst_gap")) %>%
+  group_by(Type) %>%
+  slice(which.max(Result))
+```
+
+# **Conclusion**
 
 This analysis first used Python and the `Beautiful Soup` module to scrape data on meet results for the Macalester Men's Cross Country team for the seasons between 2016 and 2019 years. Then, using a combination of R packages such as `ggplot` and `lubridate` and Python modules such as `seaborn` and `pandas`, we were able to analyze runner performance and compare team performance in each of the four seasons in this sample. This gives a great overview of team and individual performances and shows how the Mac Pack has changed over the course of four years.
 
