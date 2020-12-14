@@ -9,6 +9,7 @@ output:
     code_folding: show
     toc: true
     toc_float: yes
+    keep_md: yes
 ---
 ```{python}
 # Loading Python Modules
